@@ -1,69 +1,130 @@
 
 <?php
+session_start();
 require_once "db.php";
 
+// Vetëm administratori mund të krijojë evente.
+if (!isset($_SESSION["user_id"])) {
+    header("Location: login.php");
+    exit;
+}
+
+if (($_SESSION["user_role"] ?? "") !== "admin") {
+    http_response_code(403);
+    exit("Nuk keni leje për të krijuar evente. Kjo mundësi është vetëm për administratorin.");
+}
+
 $message = "";
+$messageType = "error";
+
+$title = "";
+$category = "";
+$description = "";
+$location = "";
+$eventDate = "";
+$price = "";
+$totalTickets = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = trim($_POST["title"] ?? "");
-    $description = trim($_POST["description"] ?? "");
     $category = trim($_POST["category"] ?? "");
+    $description = trim($_POST["description"] ?? "");
     $location = trim($_POST["location"] ?? "");
-    $event_date = $_POST["event_date"] ?? "";
-    $price = $_POST["price"] ?? "";
-    $total_tickets = $_POST["total_tickets"] ?? "";
+    $eventDate = trim($_POST["event_date"] ?? "");
+    $priceInput = trim($_POST["price"] ?? "");
+    $ticketsInput = trim($_POST["total_tickets"] ?? "");
+
+    $price = $priceInput;
+    $totalTickets = $ticketsInput;
+
+    $validDate = false;
+
+    if ($eventDate !== "") {
+        $dateObject = DateTime::createFromFormat(
+            "Y-m-d\TH:i",
+            $eventDate
+        );
+
+        $validDate = $dateObject
+            && $dateObject->format("Y-m-d\TH:i") === $eventDate;
+    }
 
     if (
         $title === "" ||
         $category === "" ||
         $location === "" ||
-        $event_date === "" ||
-        $price === "" ||
-        $total_tickets === ""
+        !$validDate ||
+        $priceInput === "" ||
+        $ticketsInput === ""
     ) {
         $message = "Ju lutem plotësoni të gjitha fushat e detyrueshme.";
+
+    } elseif (!is_numeric($priceInput) || (float)$priceInput < 0) {
+        $message = "Çmimi duhet të jetë numër pozitiv ose zero.";
+
     } elseif (
-        !is_numeric($price) ||
-        (float)$price < 0 ||
-        filter_var($total_tickets, FILTER_VALIDATE_INT) === false ||
-        (int)$total_tickets < 1
+        !ctype_digit($ticketsInput) ||
+        (int)$ticketsInput < 1
     ) {
-        $message = "Çmimi duhet të jetë pozitiv ose zero dhe biletat duhet të jenë të paktën 1.";
+        $message = "Numri i biletave duhet të jetë së paku 1.";
+
     } else {
         try {
-            // Gjejmë administratorin
-            $userQuery = $pdo->prepare(
-                "SELECT id FROM users WHERE email = ? AND role = 'admin' LIMIT 1"
+            $adminId = (int)$_SESSION["user_id"];
+
+            // Kontrollojmë nëse administratori ekziston.
+            $stmt = $pdo->prepare(
+                "SELECT id FROM users WHERE id = ? AND role = 'admin'"
             );
-            $userQuery->execute(["admin@eventmanager.com"]);
-            $admin = $userQuery->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute([$adminId]);
 
-            if (!$admin) {
-                $message = "Administratori nuk u gjet në databazë.";
-            } else {
-                // Ruajmë eventin në databazë
-                $sql = "INSERT INTO events
-                    (title, description, category, location, event_date,
-                     price, total_tickets, available_tickets, created_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([
-                    $title,
-                    $description,
-                    $category,
-                    $location,
-                    $event_date,
-                    $price,
-                    (int)$total_tickets,
-                    (int)$total_tickets,
-                    $admin["id"]
-                ]);
-
-                $message = "Eventi u regjistrua me sukses!";
+            if (!$stmt->fetch()) {
+                throw new Exception(
+                    "Llogaria nuk ka leje administratori."
+                );
             }
+
+            $formattedDate = str_replace("T", " ", $eventDate);
+            $priceValue = round((float)$priceInput, 2);
+            $ticketCount = (int)$ticketsInput;
+
+            // Ruajmë eventin dhe numrin fillestar të biletave.
+            $stmt = $pdo->prepare(
+                "INSERT INTO events
+                (
+                    title,
+                    description,
+                    category,
+                    location,
+                    event_date,
+                    price,
+                    total_tickets,
+                    available_tickets,
+                    created_by
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            $stmt->execute([
+                $title,
+                $description,
+                $category,
+                $location,
+                $formattedDate,
+                $priceValue,
+                $ticketCount,
+                $ticketCount,
+                $adminId
+            ]);
+
+            header("Location: index.php?event_created=1");
+            exit;
+
         } catch (PDOException $e) {
-            $message = "Ndodhi një gabim gjatë ruajtjes së eventit.";
+            $message = "Gabim gjatë ruajtjes së eventit. Kontrolloni të dhënat e databazës.";
+
+        } catch (Exception $e) {
+            $message = $e->getMessage();
         }
     }
 }
@@ -74,118 +135,152 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shto event</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
-            padding: 30px 15px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px #00000015;
-        }
-
-        h1 {
-            text-align: center;
-            color: #1e3a8a;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #cbd5e1;
-            border-radius: 5px;
-        }
-
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        .message {
-            padding: 10px;
-            background: #e0f2fe;
-            border-radius: 5px;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 15px;
-        }
-    </style>
+    <title>Krijo event të ri</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-<div class="container">
-    <h1>Regjistro event të ri</h1>
 
-    <?php if ($message !== ""): ?>
-        <p class="message">
-            <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
-        </p>
-    <?php endif; ?>
+<header>
+    <div class="header-content">
+        <h1>Sistemi për Menaxhimin e Eventeve dhe Biletave</h1>
 
-    <form method="POST" action="">
-        <label for="title">Emri i eventit *</label>
-        <input type="text" id="title" name="title" required>
+        <nav>
+            <a href="index.php">Kryefaqja</a>
+            <a href="create_event.php">Krijo event</a>
+            <a href="reservations.php">Rezervimet e mia</a>
+            <a href="logout.php">Dil nga llogaria</a>
+        </nav>
+    </div>
+</header>
 
-        <label for="description">Përshkrimi</label>
-        <textarea id="description" name="description" rows="4"></textarea>
+<main class="container">
+    <section class="form-card">
+        <div class="section-heading">
+            <h1>Regjistro event të ri</h1>
+            <p class="muted">
+                Plotëso të dhënat për eventin që dëshiron të regjistrosh.
+            </p>
+        </div>
 
-        <label for="category">Kategoria *</label>
-        <select id="category" name="category" required>
-            <option value="">Zgjidh kategorinë</option>
-            <option value="Koncert">Koncert</option>
-            <option value="Konferencë">Konferencë</option>
-            <option value="Sport">Sport</option>
-            <option value="Kulturë">Kulturë</option>
-            <option value="Tjetër">Tjetër</option>
-        </select>
+        <?php if ($message !== ""): ?>
+            <div class="message <?= htmlspecialchars($messageType, ENT_QUOTES, "UTF-8") ?>">
+                <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
+            </div>
+        <?php endif; ?>
 
-        <label for="location">Lokacioni *</label>
-        <input type="text" id="location" name="location" required>
+        <form method="POST" class="form-grid">
 
-        <label for="event_date">Data dhe ora *</label>
-        <input type="datetime-local" id="event_date" name="event_date" required>
+            <div class="field">
+                <label for="title">Titulli i eventit *</label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    maxlength="200"
+                    value="<?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?>"
+                    required
+                >
+            </div>
 
-        <label for="price">Çmimi i biletës (€) *</label>
-        <input type="number" id="price" name="price"
-               min="0" step="0.01" required>
+            <div class="field">
+                <label for="category">Kategoria *</label>
+                <select id="category" name="category" required>
+                    <option value="">Zgjidh kategorinë</option>
+                    <?php
+                    $categories = [
+                        "Koncert",
+                        "Konferencë",
+                        "Sport",
+                        "Kulturë",
+                        "Teknologji",
+                        "Tjetër"
+                    ];
+                    ?>
+                    <?php foreach ($categories as $item): ?>
+                        <option
+                            value="<?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>"
+                            <?= $category === $item ? "selected" : "" ?>
+                        >
+                            <?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-        <label for="total_tickets">Numri i biletave *</label>
-        <input type="number" id="total_tickets" name="total_tickets"
-               min="1" step="1" required>
+            <div class="field">
+                <label for="description">Përshkrimi</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                ><?= htmlspecialchars($description, ENT_QUOTES, "UTF-8") ?></textarea>
+            </div>
 
-        <button type="submit">Ruaj eventin</button>
-    </form>
+            <div class="field">
+                <label for="location">Lokacioni *</label>
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    maxlength="200"
+                    value="<?= htmlspecialchars($location, ENT_QUOTES, "UTF-8") ?>"
+                    required
+                >
+            </div>
 
-    <a href="index.php">Kthehu te faqja kryesore</a>
-</div>
+            <div class="field">
+                <label for="event_date">Data dhe ora e eventit *</label>
+                <input
+                    type="datetime-local"
+                    id="event_date"
+                    name="event_date"
+                    value="<?= htmlspecialchars($eventDate, ENT_QUOTES, "UTF-8") ?>"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="price">Çmimi për biletë (€) *</label>
+                <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0"
+                    step="0.01"
+                    value="<?= htmlspecialchars($price, ENT_QUOTES, "UTF-8") ?>"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="total_tickets">Numri total i biletave *</label>
+                <input
+                    type="number"
+                    id="total_tickets"
+                    name="total_tickets"
+                    min="1"
+                    step="1"
+                    value="<?= htmlspecialchars($totalTickets, ENT_QUOTES, "UTF-8") ?>"
+                    required
+                >
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="button">
+                    Ruaj eventin
+                </button>
+
+                <a href="index.php" class="button secondary">
+                    Anulo
+                </a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>Sistemi për Menaxhimin e Eventeve dhe Biletave</p>
+</footer>
+
 </body>
 </html>

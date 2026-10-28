@@ -1,97 +1,97 @@
 
 <?php
+session_start();
 require_once "db.php";
 
-$reservationId = filter_input(
-    INPUT_GET,
-    "id",
-    FILTER_VALIDATE_INT
-);
+// Lejohet anulimi vetëm për përdorues të kyçur.
+if (!isset($_SESSION["user_id"])) {
+    header("Location: login.php");
+    exit;
+}
 
-$message = "";
+// Anulimi duhet të bëhet përmes formularit POST.
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: reservations.php");
+    exit;
+}
+
+// Kontrolli CSRF për të mbrojtur formularin.
+if (
+    !isset($_SESSION["csrf_token"], $_POST["csrf_token"]) ||
+    !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])
+) {
+    http_response_code(403);
+    exit("Kërkesa është e pavlefshme. Kthehu te rezervimet dhe provo përsëri.");
+}
+
+$reservationId = filter_input(INPUT_POST, "reservation_id", FILTER_VALIDATE_INT);
 
 if (!$reservationId || $reservationId < 1) {
-    $message = "ID e rezervimit nuk është e vlefshme.";
-} else {
-    try {
-        $pdo->beginTransaction();
-
-        // Gjejmë dhe bllokojmë rezervimin gjatë përpunimit
-        $stmt = $pdo->prepare(
-            "SELECT id, event_id, quantity, status
-             FROM reservations
-             WHERE id = ?
-             FOR UPDATE"
-        );
-        $stmt->execute([$reservationId]);
-        $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$reservation) {
-            throw new Exception("Rezervimi nuk u gjet.");
-        }
-
-        if ($reservation["status"] !== "confirmed") {
-            throw new Exception(
-                "Ky rezervim është anuluar ose nuk është aktiv."
-            );
-        }
-
-        // Kthejmë biletat në dispozicion
-        $stmt = $pdo->prepare(
-            "UPDATE events
-             SET available_tickets = available_tickets + ?
-             WHERE id = ?"
-        );
-        $stmt->execute([
-            (int)$reservation["quantity"],
-            (int)$reservation["event_id"]
-        ]);
-
-        // Ndryshojmë statusin e rezervimit
-        $stmt = $pdo->prepare(
-            "UPDATE reservations
-             SET status = 'cancelled'
-             WHERE id = ? AND status = 'confirmed'"
-        );
-        $stmt->execute([$reservationId]);
-
-        if ($stmt->rowCount() !== 1) {
-            throw new Exception(
-                "Rezervimi nuk mund të anulohej."
-            );
-        }
-
-        $pdo->commit();
-
-        header("Location: reservations.php?cancelled=1");
-        exit;
-
-    } catch (Throwable $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-
-        $message = $e instanceof PDOException
-            ? "Ndodhi një gabim gjatë anulimit."
-            : $e->getMessage();
-    }
+    header("Location: reservations.php?error=invalid");
+    exit;
 }
-?>
 
-<!DOCTYPE html>
-<html lang="sq">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anulimi i rezervimit</title>
-</head>
-<body>
-    <h1>Anulimi i rezervimit</h1>
+try {
+    $pdo->beginTransaction();
 
-    <p>
-        <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
-    </p>
+    // Kontrollojmë që rezervimi i përket përdoruesit të kyçur.
+    $stmt = $pdo->prepare(
+        "SELECT id, event_id, quantity, status
+         FROM reservations
+         WHERE id = ? AND user_id = ?
+         FOR UPDATE"
+    );
 
-    <a href="reservations.php">Kthehu te rezervimet</a>
-</body>
-</html>
+    $stmt->execute([$reservationId, $_SESSION["user_id"]]);
+    $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$reservation) {
+        $pdo->rollBack();
+        header("Location: reservations.php?error=not_found");
+        exit;
+    }
+
+    // Parandalojmë kthimin e biletave më shumë se një herë.
+    if ($reservation["status"] !== "confirmed") {
+        $pdo->rollBack();
+        header("Location: reservations.php?error=already_cancelled");
+        exit;
+    }
+
+    // Ndryshojmë statusin e rezervimit.
+    $stmt = $pdo->prepare(
+        "UPDATE reservations
+         SET status = 'cancelled'
+         WHERE id = ? AND user_id = ?"
+    );
+
+    $stmt->execute([$reservationId, $_SESSION["user_id"]]);
+
+    // Rikthejmë biletat e anuluara në dispozicion.
+    $stmt = $pdo->prepare(
+        "UPDATE events
+         SET available_tickets =
+             LEAST(total_tickets, available_tickets + ?)
+         WHERE id = ?"
+    );
+
+    $stmt->execute([
+        $reservation["quantity"],
+        $reservation["event_id"]
+    ]);
+
+    $pdo->commit();
+
+    header("Location: reservations.php?cancelled=1");
+    exit;
+
+} catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
+    error_log("Gabim gjatë anulimit të rezervimit: " . $e->getMessage());
+
+    header("Location: reservations.php?error=failed");
+    exit;
+}

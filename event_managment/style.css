@@ -1,0 +1,429 @@
+
+/* =========================
+   DIZAJNI I PËRBASHKËT
+   ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --nav-dark: #111c44;
+    --nav-blue: #254fbd;
+    --background: #f4f7fb;
+    --white: #ffffff;
+    --text: #172033;
+    --muted: #64748b;
+    --border: #e5eaf3;
+    --success: #15803d;
+    --danger: #b91c1c;
+    --radius: 12px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Menuja e sipërme */
+
+header {
+    background: linear-gradient(135deg, var(--nav-dark), var(--nav-blue));
+    color: var(--white);
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.brand {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+nav a:hover,
+nav a.active {
+    background: #ffffff25;
+}
+
+/* Seksioni hyrës */
+
+.hero {
+    background: linear-gradient(135deg, #1d4ed8, #647ff0);
+    color: var(--white);
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: clamp(27px, 4vw, 40px);
+    margin: 0 0 12px;
+    line-height: 1.3;
+}
+
+.hero p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: #edf2ff;
+}
+
+/* Përmbajtja dhe kartat */
+
+.container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 0 22px;
+}
+
+.form-card,
+.event,
+.content-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 28px #1720330b;
+}
+
+.form-card {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.form-card h2,
+.content-card h2 {
+    color: #172554;
+    margin-top: 0;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    margin: 0 0 8px;
+}
+
+.muted,
+.intro {
+    color: var(--muted);
+}
+
+/* Formularët */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.field {
+    min-width: 0;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #334155;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input,
+select,
+textarea {
+    display: block;
+    width: 100%;
+    padding: 12px 13px;
+    font: inherit;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px #2563eb20;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Butonat dhe lidhjet */
+
+.button,
+.add-link,
+.reserve-link,
+button[type="submit"] {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 9px;
+    font: inherit;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.button-primary,
+.add-link,
+.reserve-link,
+button[type="submit"] {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.button-primary:hover,
+.add-link:hover,
+.reserve-link:hover,
+button[type="submit"]:hover {
+    background: var(--primary-dark);
+}
+
+.button-secondary {
+    background: #eef2ff;
+    color: var(--nav-blue);
+}
+
+.button-secondary:hover {
+    background: #e0e7ff;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+/* Mesazhet */
+
+.message,
+.alert,
+.error,
+.success,
+.empty {
+    padding: 14px 16px;
+    border-radius: 9px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.message.success,
+.alert.success,
+.success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.message.error,
+.alert.error,
+.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.empty {
+    background: var(--white);
+    color: var(--muted);
+    border: 1px solid var(--border);
+}
+
+/* Eventet */
+
+.events {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 24px;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px #17203314;
+}
+
+.event h2,
+.event h3 {
+    color: #172554;
+    overflow-wrap: anywhere;
+}
+
+.category {
+    display: inline-block;
+    align-self: flex-start;
+    background: #e8efff;
+    color: var(--nav-blue);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.price {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--success);
+}
+
+.tickets {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.sold-out {
+    background: #fff1f2;
+    color: #be123c;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Tabelat */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+}
+
+th,
+td {
+    text-align: left;
+    padding: 13px;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #eef2ff;
+    color: #172554;
+}
+
+tr:hover td {
+    background: #f8faff;
+}
+
+/* Fundi i faqes */
+
+footer {
+    margin-top: 55px;
+    padding: 24px 15px;
+    text-align: center;
+    color: var(--muted);
+    background: var(--white);
+    border-top: 1px solid var(--border);
+}
+
+/* Përshtatja për telefona */
+
+@media (max-width: 600px) {
+    header {
+        padding: 20px;
+    }
+
+    nav {
+        gap: 6px;
+    }
+
+    nav a {
+        padding: 8px 10px;
+    }
+
+    .hero {
+        padding: 32px 18px;
+    }
+
+    .container {
+        margin-top: 22px;
+        padding: 0 14px;
+    }
+
+    .form-card,
+    .content-card,
+    .event {
+        padding: 20px 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions .button,
+    .actions button {
+        width: 100%;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        padding: 9px;
+    }
+}

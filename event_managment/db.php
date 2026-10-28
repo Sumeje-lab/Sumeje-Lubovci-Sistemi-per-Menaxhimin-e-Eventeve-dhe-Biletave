@@ -17,10 +17,8 @@ try {
         PDO::ERRMODE_EXCEPTION
     );
 
-    echo "Lidhja me databazen u realizua me sukses!";
 } catch (PDOException $e) {
-    die("Gabim ne lidhjen me databazen: " . $e->getMessage());
+    error_log("Gabim ne lidhjen me databazen: " . $e->getMessage());
+    die("Nuk mund te lidhemi me databazen. Kontrollo konfigurimin e XAMPP.");
 }
 ?>
-
-
