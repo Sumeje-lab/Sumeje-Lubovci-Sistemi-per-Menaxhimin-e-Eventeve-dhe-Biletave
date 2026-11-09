@@ -24,7 +24,12 @@ if (
     exit("Kërkesa është e pavlefshme. Kthehu te rezervimet dhe provo përsëri.");
 }
 
-$reservationId = filter_input(INPUT_POST, "reservation_id", FILTER_VALIDATE_INT);
+// Kontrollojmë ID-në e rezervimit.
+$reservationId = filter_input(
+    INPUT_POST,
+    "reservation_id",
+    FILTER_VALIDATE_INT
+);
 
 if (!$reservationId || $reservationId < 1) {
     header("Location: reservations.php?error=invalid");
@@ -32,9 +37,10 @@ if (!$reservationId || $reservationId < 1) {
 }
 
 try {
+    // Fillojmë transaksionin.
     $pdo->beginTransaction();
 
-    // Kontrollojmë që rezervimi i përket përdoruesit të kyçur.
+    // Kontrollojmë nëse rezervimi i përket përdoruesit.
     $stmt = $pdo->prepare(
         "SELECT id, event_id, quantity, status
          FROM reservations
@@ -42,18 +48,25 @@ try {
          FOR UPDATE"
     );
 
-    $stmt->execute([$reservationId, $_SESSION["user_id"]]);
+    $stmt->execute([
+        $reservationId,
+        $_SESSION["user_id"]
+    ]);
+
     $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Nëse rezervimi nuk ekziston ose nuk i përket përdoruesit.
     if (!$reservation) {
         $pdo->rollBack();
+
         header("Location: reservations.php?error=not_found");
         exit;
     }
 
-    // Parandalojmë kthimin e biletave më shumë se një herë.
+    // Parandalojmë anulimin e dyfishtë.
     if ($reservation["status"] !== "confirmed") {
         $pdo->rollBack();
+
         header("Location: reservations.php?error=already_cancelled");
         exit;
     }
@@ -65,9 +78,12 @@ try {
          WHERE id = ? AND user_id = ?"
     );
 
-    $stmt->execute([$reservationId, $_SESSION["user_id"]]);
+    $stmt->execute([
+        $reservationId,
+        $_SESSION["user_id"]
+    ]);
 
-    // Rikthejmë biletat e anuluara në dispozicion.
+    // Rikthejmë biletat në dispozicion.
     $stmt = $pdo->prepare(
         "UPDATE events
          SET available_tickets =
@@ -80,17 +96,26 @@ try {
         $reservation["event_id"]
     ]);
 
+    // Përfundojmë transaksionin.
     $pdo->commit();
 
+    // Gjenerojmë token të ri CSRF.
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+
+    // Kthehemi te rezervimet me mesazh suksesi.
     header("Location: reservations.php?cancelled=1");
     exit;
 
 } catch (PDOException $e) {
+
+    // Në rast gabimi, anulojmë transaksionin.
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
 
-    error_log("Gabim gjatë anulimit të rezervimit: " . $e->getMessage());
+    error_log(
+        "Gabim gjatë anulimit të rezervimit: " . $e->getMessage()
+    );
 
     header("Location: reservations.php?error=failed");
     exit;

@@ -72,7 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $adminId = (int)$_SESSION["user_id"];
 
-            // Kontrollojmë nëse administratori ekziston.
             $stmt = $pdo->prepare(
                 "SELECT id FROM users WHERE id = ? AND role = 'admin'"
             );
@@ -88,7 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $priceValue = round((float)$priceInput, 2);
             $ticketCount = (int)$ticketsInput;
 
-            // Ruajmë eventin dhe numrin fillestar të biletave.
             $stmt = $pdo->prepare(
                 "INSERT INTO events
                 (
@@ -138,27 +136,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Krijo event të ri</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<header>
+<body class="auth-page">
+
+<header class="pastel-header">
     <div class="header-content">
-        <h1>Sistemi për Menaxhimin e Eventeve dhe Biletave</h1>
+
+        <a href="index.php" class="brand-link">
+            <span class="gold-flower">✿</span>
+            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        </a>
 
         <nav>
             <a href="index.php">Kryefaqja</a>
-            <a href="create_event.php">Krijo event</a>
+            <a href="create_event.php" class="active">Krijo event</a>
             <a href="reservations.php">Rezervimet e mia</a>
             <a href="logout.php">Dil nga llogaria</a>
         </nav>
+
     </div>
 </header>
 
-<main class="container">
-    <section class="form-card">
+<main class="container event-create-container">
+
+    <section class="form-card event-create-card">
+
+        <div class="event-flower">✿</div>
+
         <div class="section-heading">
+            <span class="pastel-label">Hapësira e administratorit</span>
+
             <h1>Regjistro event të ri</h1>
+
             <p class="muted">
-                Plotëso të dhënat për eventin që dëshiron të regjistrosh.
+                Plotëso të dhënat dhe krijo një event të ri
+                në sistemin tonë.
             </p>
         </div>
 
@@ -168,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="form-grid">
+        <form method="POST" class="form-grid pastel-event-form">
 
             <div class="field">
                 <label for="title">Titulli i eventit *</label>
@@ -177,6 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     id="title"
                     name="title"
                     maxlength="200"
+                    placeholder="Shkruaj titullin e eventit"
                     value="<?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?>"
                     required
                 >
@@ -184,8 +197,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="field">
                 <label for="category">Kategoria *</label>
+
                 <select id="category" name="category" required>
                     <option value="">Zgjidh kategorinë</option>
+
                     <?php
                     $categories = [
                         "Koncert",
@@ -196,6 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         "Tjetër"
                     ];
                     ?>
+
                     <?php foreach ($categories as $item): ?>
                         <option
                             value="<?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>"
@@ -204,32 +220,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>
                         </option>
                     <?php endforeach; ?>
+
                 </select>
             </div>
 
-            <div class="field">
-                <label for="description">Përshkrimi</label>
+            <div class="field full-width">
+                <label for="description">Përshkrimi i eventit</label>
+
                 <textarea
                     id="description"
                     name="description"
                     rows="4"
+                    placeholder="Shkruaj disa informata rreth eventit..."
                 ><?= htmlspecialchars($description, ENT_QUOTES, "UTF-8") ?></textarea>
             </div>
 
             <div class="field">
                 <label for="location">Lokacioni *</label>
+
                 <input
                     type="text"
                     id="location"
                     name="location"
                     maxlength="200"
+                    placeholder="P.sh. Prishtinë"
                     value="<?= htmlspecialchars($location, ENT_QUOTES, "UTF-8") ?>"
                     required
                 >
             </div>
 
             <div class="field">
-                <label for="event_date">Data dhe ora e eventit *</label>
+                <label for="event_date">Data dhe ora *</label>
+
                 <input
                     type="datetime-local"
                     id="event_date"
@@ -241,12 +263,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="field">
                 <label for="price">Çmimi për biletë (€) *</label>
+
                 <input
                     type="number"
                     id="price"
                     name="price"
                     min="0"
                     step="0.01"
+                    placeholder="0.00"
                     value="<?= htmlspecialchars($price, ENT_QUOTES, "UTF-8") ?>"
                     required
                 >
@@ -254,32 +278,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="field">
                 <label for="total_tickets">Numri total i biletave *</label>
+
                 <input
                     type="number"
                     id="total_tickets"
                     name="total_tickets"
                     min="1"
                     step="1"
+                    placeholder="P.sh. 100"
                     value="<?= htmlspecialchars($totalTickets, ENT_QUOTES, "UTF-8") ?>"
                     required
                 >
             </div>
 
-            <div class="actions">
-                <button type="submit" class="button">
-                    Ruaj eventin
+            <div class="actions event-actions">
+
+                <button type="submit" class="button auth-button">
+                    <span>✿</span> Ruaj eventin
                 </button>
 
                 <a href="index.php" class="button secondary">
                     Anulo
                 </a>
+
             </div>
+
         </form>
+
+        <p class="event-form-note">
+            Fushat me simbolin (*) janë të detyrueshme.
+        </p>
+
     </section>
+
 </main>
 
-<footer>
-    <p>Sistemi për Menaxhimin e Eventeve dhe Biletave</p>
+<footer class="pastel-footer">
+    <p>
+        <span class="gold-flower">✿</span>
+        Sistemi për Menaxhimin e Eventeve dhe Biletave
+        <span class="gold-flower">✿</span>
+    </p>
 </footer>
 
 </body>

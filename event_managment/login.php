@@ -5,7 +5,6 @@ require_once "db.php";
 
 $message = "";
 $messageType = "error";
-
 $email = "";
 
 if (isset($_GET["registered"]) && $_GET["registered"] === "1") {
@@ -23,10 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $stmt = $pdo->prepare(
                 "SELECT id, name, email, password_hash, role
-                 FROM users
-                 WHERE email = ?"
+                 FROM users WHERE email = ?"
             );
-
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -55,26 +52,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyçu</title>
+    <title>Kyçu | Evente & Bileta</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-page">
 
-<header>
-    <div class="header-content">
-        <h1>Sistemi për Menaxhimin e Eventeve dhe Biletave</h1>
-        <nav>
-            <a href="index.php">Kryefaqja</a>
-            <a href="register.php">Regjistrohu</a>
-        </nav>
-    </div>
+<header class="pastel-header">
+    <a href="index.php" class="brand-link">
+        <span class="gold-flower">✿</span>
+        <span>Evente <span class="brand-amp">&</span> Bileta</span>
+    </a>
+
+    <nav>
+        <a href="index.php">Kryefaqja</a>
+        <a href="register.php" class="nav-highlight">Regjistrohu</a>
+    </nav>
 </header>
 
-<main class="container">
-    <section class="form-card">
-        <div class="section-heading">
-            <h1>Kyçu në llogari</h1>
-            <p class="muted">Shkruaj të dhënat e llogarisë tënde.</p>
+<main class="auth-container">
+    <div class="auth-decoration decoration-one">✿</div>
+    <div class="auth-decoration decoration-two">✿</div>
+
+    <section class="auth-card">
+        <div class="auth-flower">✿</div>
+
+        <div class="auth-heading">
+            <span class="eyebrow">MIRË SE U KTHEVE</span>
+            <h1>Mirë se vjen përsëri!</h1>
+            <p>Kyçu në llogarinë tënde dhe zbulo eventet e ardhshme.</p>
         </div>
 
         <?php if ($message !== ""): ?>
@@ -83,13 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="form-grid">
+        <form method="POST" class="auth-form">
             <div class="field">
                 <label for="email">Email-i</label>
                 <input
                     type="email"
                     id="email"
                     name="email"
+                    placeholder="Shkruaj email-in tënd"
                     value="<?= htmlspecialchars($email, ENT_QUOTES, "UTF-8") ?>"
                     required
                     autocomplete="email"
@@ -102,28 +108,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="password"
                     id="password"
                     name="password"
+                    placeholder="Shkruaj fjalëkalimin"
                     required
                     autocomplete="current-password"
                 >
             </div>
 
-            <div class="actions">
-                <button type="submit" class="button">
-                    Kyçu
-                </button>
-            </div>
+            <button type="submit" class="auth-button">
+                Kyçu në llogari <span>→</span>
+            </button>
         </form>
 
-        <p class="intro">
-            Nuk ke llogari?
-            <a href="register.php">Regjistrohu këtu</a>.
+        <div class="auth-divider">
+            <span>OSE</span>
+        </div>
+
+        <p class="auth-bottom">
+            Nuk ke ende llogari?
+            <a href="register.php">Regjistrohu këtu</a>
         </p>
     </section>
+
+    <p class="auth-note">✿ Çdo event i bukur fillon me një përvojë të bukur. ✿</p>
 </main>
 
-<footer>
-    <p>Sistemi për Menaxhimin e Eventeve dhe Biletave</p>
+<footer class="pastel-footer">
+    <p>✿ Evente & Bileta · Përjeto momente të veçanta ✿</p>
 </footer>
 
 </body>
 </html>
+

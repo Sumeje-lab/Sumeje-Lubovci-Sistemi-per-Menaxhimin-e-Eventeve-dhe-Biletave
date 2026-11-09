@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                  WHERE id = ?
                  FOR UPDATE"
             );
+
             $stmt->execute([$eventId]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt = $pdo->prepare(
                 "SELECT id FROM users WHERE id = ?"
             );
+
             $stmt->execute([$userId]);
 
             if (!$stmt->fetch()) {
@@ -88,6 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $stmt->execute([$quantity, $eventId]);
 
+            // Përfundojmë transaksionin.
             $pdo->commit();
 
             $message = "Rezervimi u realizua me sukses! Çmimi total: "
@@ -99,10 +102,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                  FROM events
                  WHERE id = ?"
             );
+
             $stmt->execute([$eventId]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
         } catch (Exception $e) {
+
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
@@ -118,13 +123,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Marrim eventin kur faqja hapet për herë të parë.
+// Marrim eventin kur faqja hapet për herë të parë
+// ose kur të dhënat e eventit nuk janë marrë ende.
 if ($eventId && $eventId > 0 && !$event) {
     $stmt = $pdo->prepare(
         "SELECT id, title, price, available_tickets
          FROM events
          WHERE id = ?"
     );
+
     $stmt->execute([$eventId]);
     $event = $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -132,60 +139,99 @@ if ($eventId && $eventId > 0 && !$event) {
 
 <!DOCTYPE html>
 <html lang="sq">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Rezervo bileta</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<header>
+<body class="auth-page">
+
+<header class="pastel-header">
+
     <div class="header-content">
-        <h1>Sistemi për Menaxhimin e Eventeve dhe Biletave</h1>
+
+        <a href="index.php" class="brand-link">
+            <span class="gold-flower">✿</span>
+            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        </a>
 
         <nav>
             <a href="index.php">Kryefaqja</a>
-            <a href="reservations.php">Rezervimet</a>
+            <a href="reservations.php">Rezervimet e mia</a>
             <a href="logout.php">Dil nga llogaria</a>
         </nav>
+
     </div>
+
 </header>
 
-<main class="container">
-    <section class="form-card">
+<main class="container reservation-form-container">
+
+    <section class="form-card reservation-form-card">
+
+        <div class="event-flower">✿</div>
+
         <div class="section-heading">
+
+            <span class="pastel-label">Përjeto eventin</span>
+
             <h1>Rezervimi i biletave</h1>
+
             <p class="muted">
-                Zgjidh numrin e biletave për eventin tënd.
+                Zgjidh numrin e biletave dhe siguro vendin tënd në event.
             </p>
+
         </div>
 
         <?php if ($message !== ""): ?>
+
             <div class="message <?= htmlspecialchars($messageType, ENT_QUOTES, "UTF-8") ?>">
                 <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
             </div>
+
         <?php endif; ?>
 
         <?php if ($event): ?>
-            <div class="content-card">
+
+            <div class="reservation-event-info">
+
+                <div class="reservation-event-icon">✿</div>
+
                 <h2>
                     <?= htmlspecialchars($event["title"], ENT_QUOTES, "UTF-8") ?>
                 </h2>
 
-                <p>
-                    <strong>Çmimi për biletë:</strong>
-                    <?= number_format((float) $event["price"], 2) ?> €
-                </p>
+                <div class="reservation-info-row">
 
-                <p>
-                    <strong>Bileta të lira:</strong>
-                    <?= (int) $event["available_tickets"] ?>
-                </p>
+                    <span>Çmimi për biletë</span>
+
+                    <strong>
+                        <?= number_format((float) $event["price"], 2) ?> €
+                    </strong>
+
+                </div>
+
+                <div class="reservation-info-row">
+
+                    <span>Bileta të lira</span>
+
+                    <strong>
+                        <?= (int) $event["available_tickets"] ?>
+                    </strong>
+
+                </div>
+
             </div>
 
             <?php if ((int) $event["available_tickets"] > 0): ?>
-                <form method="POST" class="form-grid">
+
+                <form method="POST" class="form-grid pastel-reservation-form">
+
                     <input
                         type="hidden"
                         name="event_id"
@@ -193,49 +239,90 @@ if ($eventId && $eventId > 0 && !$event) {
                     >
 
                     <div class="field">
-                        <label for="quantity">Numri i biletave</label>
+
+                        <label for="quantity">
+                            Numri i biletave
+                        </label>
+
                         <input
                             type="number"
                             id="quantity"
                             name="quantity"
                             min="1"
                             max="<?= (int) $event["available_tickets"] ?>"
+                            placeholder="Shkruaj numrin e biletave"
                             required
                         >
+
+                        <small class="field-help">
+                            Mund të rezervosh deri në
+                            <?= (int) $event["available_tickets"] ?>
+                            bileta.
+                        </small>
+
                     </div>
 
-                    <div class="actions">
-                        <button type="submit" class="button">
-                            Konfirmo rezervimin
+                    <div class="actions reservation-actions">
+
+                        <button type="submit" class="button auth-button">
+                            ✿ Konfirmo rezervimin
                         </button>
 
                         <a href="index.php" class="button secondary">
                             Kthehu te eventet
                         </a>
+
                     </div>
+
                 </form>
+
             <?php else: ?>
-                <p class="sold-out">
+
+                <div class="sold-out pastel-sold-out">
                     Ky event nuk ka më bileta të lira.
-                </p>
+                </div>
+
+                <div class="reservation-back-link">
+                    <a href="index.php" class="button secondary">
+                        Kthehu te eventet
+                    </a>
+                </div>
+
             <?php endif; ?>
 
         <?php else: ?>
-            <p class="empty">
-                Eventi nuk u gjet. Kthehu te faqja kryesore dhe zgjidh një event.
-            </p>
 
-            <a href="index.php" class="button">
-                Kthehu te eventet
-            </a>
+            <div class="pastel-empty">
+
+                <div class="empty-flower">✿</div>
+
+                <h2>Eventi nuk u gjet</h2>
+
+                <p>
+                    Eventi që kërkon nuk ekziston ose nuk është më i disponueshëm.
+                </p>
+
+                <a href="index.php" class="button auth-button">
+                    Kthehu te eventet
+                </a>
+
+            </div>
+
         <?php endif; ?>
+
     </section>
+
 </main>
 
-<footer>
-    <p>Sistemi për Menaxhimin e Eventeve dhe Biletave</p>
+<footer class="pastel-footer">
+
+    <p>
+        <span class="gold-flower">✿</span>
+        &copy; <?= date("Y") ?> Sistemi për Menaxhimin e Eventeve dhe Biletave
+        <span class="gold-flower">✿</span>
+    </p>
+
 </footer>
 
 </body>
 </html>
-

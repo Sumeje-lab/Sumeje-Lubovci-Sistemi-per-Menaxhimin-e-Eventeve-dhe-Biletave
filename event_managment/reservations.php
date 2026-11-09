@@ -47,6 +47,7 @@ $messages = [
 
 $errorCode = $_GET["error"] ?? "";
 ?>
+
 <!DOCTYPE html>
 <html lang="sq">
 <head>
@@ -55,27 +56,46 @@ $errorCode = $_GET["error"] ?? "";
     <title>Rezervimet e mia</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<header class="site-header">
+<body class="auth-page">
+
+<header class="pastel-header">
     <div class="header-content">
-        <h1>Menaxhimi i Eventeve</h1>
+
+        <a href="index.php" class="brand-link">
+            <span class="gold-flower">✿</span>
+            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        </a>
 
         <nav>
-            <a href="index.php">Ballina</a>
-            <a href="reservations.php">Rezervimet e mia</a>
+            <a href="index.php">Kryefaqja</a>
+
+            <a href="reservations.php" class="active">
+                Rezervimet e mia
+            </a>
+
             <?php if (($_SESSION["user_role"] ?? "") === "admin"): ?>
                 <a href="create_event.php">Krijo event</a>
             <?php endif; ?>
-            <a href="logout.php">Dil</a>
+
+            <a href="logout.php">Dil nga llogaria</a>
         </nav>
+
     </div>
 </header>
 
-<main class="container">
-    <div class="section-heading">
-        <h2>Rezervimet e mia</h2>
-        <p>Këtu mund t'i shikosh rezervimet dhe statusin e tyre.</p>
+<main class="container reservations-container">
+
+    <div class="reservations-heading">
+        <span class="gold-flower heading-flower">✿</span>
+
+        <span class="pastel-label">Hapësira ime</span>
+
+        <h1>Rezervimet e mia</h1>
+
+        <p>
+            Këtu mund t'i shikosh rezervimet, detajet dhe statusin e tyre.
+        </p>
     </div>
 
     <?php if (isset($_GET["cancelled"]) && $_GET["cancelled"] === "1"): ?>
@@ -91,14 +111,40 @@ $errorCode = $_GET["error"] ?? "";
     <?php endif; ?>
 
     <?php if (empty($reservations)): ?>
-        <div class="content-card empty">
-            <p>Nuk ke ende rezervime.</p>
-            <a href="index.php" class="button">Shiko eventet</a>
-        </div>
+
+        <section class="content-card empty pastel-empty">
+
+            <div class="empty-flower">✿</div>
+
+            <h2>Nuk ke ende rezervime</h2>
+
+            <p>
+                Zbulo eventet e disponueshme dhe bëj rezervimin tënd të parë.
+            </p>
+
+            <a href="index.php" class="button auth-button">
+                Shiko eventet
+            </a>
+
+        </section>
+
     <?php else: ?>
-        <div class="content-card">
-            <div class="table-container">
-                <table>
+
+        <section class="content-card reservations-card">
+
+            <div class="reservations-card-heading">
+                <h2>Lista e rezervimeve</h2>
+
+                <span class="reservation-count">
+                    <?= count($reservations) ?>
+                    <?= count($reservations) === 1 ? "rezervim" : "rezervime" ?>
+                </span>
+            </div>
+
+            <div class="table-container pastel-table-container">
+
+                <table class="pastel-table">
+
                     <thead>
                         <tr>
                             <th>Eventi</th>
@@ -110,65 +156,117 @@ $errorCode = $_GET["error"] ?? "";
                             <th>Veprimi</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                     <?php foreach ($reservations as $reservation): ?>
+
                         <tr>
-                            <td><?= h($reservation["event_title"]) ?></td>
+
+                            <td class="event-name">
+                                <?= h($reservation["event_title"]) ?>
+                            </td>
+
                             <td>
                                 <?= h(date("d.m.Y H:i", strtotime($reservation["event_date"]))) ?>
                             </td>
-                            <td><?= (int) $reservation["quantity"] ?></td>
-                            <td><?= number_format((float) $reservation["total_price"], 2) ?> €</td>
+
+                            <td>
+                                <?= (int) $reservation["quantity"] ?>
+                            </td>
+
+                            <td class="price-cell">
+                                <?= number_format((float) $reservation["total_price"], 2) ?> €
+                            </td>
+
                             <td>
                                 <?php if ($reservation["status"] === "confirmed"): ?>
-                                    Konfirmuar
+
+                                    <span class="status-badge confirmed">
+                                        Konfirmuar
+                                    </span>
+
                                 <?php elseif ($reservation["status"] === "cancelled"): ?>
-                                    Anuluar
+
+                                    <span class="status-badge cancelled">
+                                        Anuluar
+                                    </span>
+
                                 <?php else: ?>
-                                    <?= h($reservation["status"]) ?>
+
+                                    <span class="status-badge other-status">
+                                        <?= h($reservation["status"]) ?>
+                                    </span>
+
                                 <?php endif; ?>
                             </td>
+
                             <td>
                                 <?= h(date("d.m.Y H:i", strtotime($reservation["created_at"]))) ?>
                             </td>
+
                             <td>
+
                                 <?php if ($reservation["status"] === "confirmed"): ?>
+
                                     <form
                                         action="cancel_reservation.php"
                                         method="POST"
                                         onsubmit="return confirm('A je i sigurt që dëshiron ta anulosh këtë rezervim?');"
                                     >
+
                                         <input
                                             type="hidden"
                                             name="reservation_id"
                                             value="<?= (int) $reservation["id"] ?>"
                                         >
+
                                         <input
                                             type="hidden"
                                             name="csrf_token"
                                             value="<?= h($_SESSION["csrf_token"]) ?>"
                                         >
-                                        <button type="submit" class="button secondary">
+
+                                        <button
+                                            type="submit"
+                                            class="cancel-button"
+                                        >
                                             Anulo rezervimin
                                         </button>
+
                                     </form>
+
                                 <?php else: ?>
-                                    —
+
+                                    <span class="no-action">—</span>
+
                                 <?php endif; ?>
+
                             </td>
+
                         </tr>
+
                     <?php endforeach; ?>
+
                     </tbody>
+
                 </table>
+
             </div>
-        </div>
+
+        </section>
+
     <?php endif; ?>
+
 </main>
 
-<footer>
-    <p>&copy; <?= date("Y") ?> Sistemi për Menaxhimin e Eventeve dhe Biletave</p>
+<footer class="pastel-footer">
+    <p>
+        <span class="gold-flower">✿</span>
+        &copy; <?= date("Y") ?> Sistemi për Menaxhimin e Eventeve dhe Biletave
+        <span class="gold-flower">✿</span>
+    </p>
 </footer>
 
 </body>
 </html>
-

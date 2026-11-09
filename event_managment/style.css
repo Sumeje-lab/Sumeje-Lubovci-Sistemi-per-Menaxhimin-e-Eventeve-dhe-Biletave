@@ -1,41 +1,674 @@
 
-/* =========================
-   DIZAJNI I PËRBASHKËT
-   ========================= */
+/* =====================================
+   EVENTE & BILETA - PASTEL FLORAL DESIGN
+===================================== */
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --nav-dark: #111c44;
-    --nav-blue: #254fbd;
-    --background: #f4f7fb;
-    --white: #ffffff;
-    --text: #172033;
-    --muted: #64748b;
-    --border: #e5eaf3;
-    --success: #15803d;
-    --danger: #b91c1c;
-    --radius: 12px;
+    --primary: #9271B5;
+    --primary-dark: #79599D;
+
+    --gold: #C5A64A;
+    --gold-light: #E9D99F;
+
+    --lavender: #EAE2F5;
+    --pink: #F8E5EE;
+    --peach: #F9EBDD;
+    --mint: #E2F0E7;
+    --blue: #E3EFF5;
+    --cream: #FFF9EF;
+
+    --background: #FCF9FD;
+    --white: #FFFFFF;
+
+    --text: #393047;
+    --muted: #82798C;
+
+    --border: #EDE5F0;
+
+    --success: #668C72;
+    --danger: #BD7484;
+
+    --radius: 18px;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
     background: var(--background);
     color: var(--text);
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-/* Menuja e sipërme */
 
-header {
-    background: linear-gradient(135deg, var(--nav-dark), var(--nav-blue));
-    color: var(--white);
-    padding: 22px 7%;
+/* HEADER */
+
+.site-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 6%;
+    position: relative;
+    z-index: 10;
+}
+
+.header-content {
+    max-width: 1250px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    text-decoration: none;
+    color: var(--gold);
+
+    font-family: Georgia, serif;
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.brand-flower {
+    width: 52px;
+    height: 52px;
+    color: var(--gold);
+}
+
+.brand-amp {
+    color: #A88CC2;
+    margin: 0 2px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text);
+
+    padding: 9px 15px;
+    border-radius: 30px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+nav a:hover,
+nav a.active {
+    background: var(--lavender);
+    color: var(--primary-dark);
+}
+
+nav a.nav-highlight {
+    background: var(--primary);
+    color: white;
+}
+
+nav a.nav-highlight:hover {
+    background: var(--primary-dark);
+}
+
+
+/* HERO SECTION */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 10% 15%, #F7DDE9 0, transparent 32%),
+        radial-gradient(circle at 90% 80%, #DDEFE9 0, transparent 30%),
+        linear-gradient(120deg, #F5EAF7, #EDE7F8 48%, #F9E9EF);
+
+    padding: 85px 20px 95px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-label {
+    display: inline-block;
+
+    color: var(--primary-dark);
+    background: rgba(255, 255, 255, 0.7);
+
+    border: 1px solid #E5D9EF;
+    border-radius: 30px;
+
+    padding: 8px 18px;
+    margin-bottom: 22px;
+
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.hero h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(36px, 6vw, 65px);
+    line-height: 1.2;
+
+    color: #514263;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: #A88CC2;
+    display: block;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 25px;
+
+    color: #756B80;
+    font-size: 17px;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.hero-decoration {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.hero-decoration-one {
+    width: 180px;
+    height: 180px;
+    background: var(--pink);
+    top: -65px;
+    left: -50px;
+}
+
+.hero-decoration-two {
+    width: 230px;
+    height: 230px;
+    background: var(--mint);
+    right: -90px;
+    bottom: -100px;
+}
+
+.hero-flower {
+    color: var(--gold);
+    font-size: 48px;
+    margin-top: 28px;
+    opacity: 0.8;
+}
+
+.welcome-message {
+    margin: 20px auto;
+    color: #69577C;
+    font-size: 16px;
+}
+
+
+/* BUTTONS */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 12px 23px;
+
+    border: none;
+    border-radius: 30px;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.button-primary {
+    background: var(--primary);
+    color: white;
+
+    box-shadow: 0 5px 15px #9271B533;
+}
+
+.button-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.button-light {
+    background: white;
+    color: var(--primary-dark);
+    border: 1px solid #E4D8ED;
+}
+
+.button-light:hover {
+    background: var(--lavender);
+}
+
+
+/* MAIN CONTAINER */
+
+.container {
+    max-width: 1250px;
+    margin: 65px auto;
+    padding: 0 25px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    margin-bottom: 32px;
+}
+
+.section-eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.section-heading h2 {
+    font-family: Georgia, serif;
+    font-size: 35px;
+    color: #514263;
+    margin: 5px 0;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.event-count {
+    background: var(--lavender);
+    color: var(--primary-dark);
+
+    padding: 10px 17px;
+    border-radius: 30px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.event-count span {
+    color: var(--gold);
+    margin-right: 5px;
+}
+
+
+/* EVENT CARDS */
+
+.events {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 25px;
+}
+
+.event {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 0 7px 25px #5142630A;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px #51426318;
+}
+
+.event-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.category {
+    display: inline-block;
+
+    background: var(--pink);
+    color: #A66C88;
+
+    border-radius: 30px;
+    padding: 6px 13px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.event-flower {
+    color: var(--gold);
+    font-size: 25px;
+}
+
+.event h3 {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    color: #574765;
+    line-height: 1.3;
+    margin-bottom: 12px;
+
+    overflow-wrap: anywhere;
+}
+
+.description {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+    overflow-wrap: anywhere;
+}
+
+.event-details {
+    background: #FAF7FC;
+    border-radius: 12px;
+    padding: 13px 15px;
+    margin-bottom: 20px;
+}
+
+.event-details p {
+    font-size: 13px;
+    color: #70677B;
+    margin: 4px 0;
+}
+
+.detail-icon {
+    color: var(--gold);
+    font-size: 17px;
+    margin-right: 8px;
+}
+
+.event-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 10px;
+
+    padding-bottom: 18px;
+    margin-top: auto;
+}
+
+.price-label {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.price {
+    color: #638B75;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.tickets {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.ticket-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+
+    background: #8EB99A;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.event-action {
+    border-top: 1px solid var(--border);
+    padding-top: 17px;
+}
+
+.reserve-link {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+}
+
+.reserve-link:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+
+/* MESSAGES */
+
+.message {
+    padding: 15px 18px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+.message.success {
+    background: var(--mint);
+    border: 1px solid #C7E2D0;
+    color: #477B57;
+}
+
+.message.error {
+    background: #FBE8EB;
+    border: 1px solid #F0CDD5;
+    color: #A64D63;
+}
+
+.empty {
+    text-align: center;
+    padding: 65px 20px;
+
+    background: white;
+    border: 1px dashed #DCCFE7;
+    border-radius: 20px;
+}
+
+.empty-icon {
+    font-size: 45px;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.empty h3 {
+    font-family: Georgia, serif;
+    font-size: 25px;
+    color: #665478;
+}
+
+.empty p {
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+
+/* SOLD OUT */
+
+.sold-out {
+    background: #FBE8EB;
+    color: #AC6476;
+
+    text-align: center;
+    padding: 11px;
+    border-radius: 30px;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* FOOTER */
+
+.site-footer {
+    background: #F0EAF5;
+    padding: 38px 20px;
+    text-align: center;
+    color: #756B80;
+}
+
+.footer-brand {
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.footer-brand span:not(.footer-flower) {
+    color: #A88CC2;
+}
+
+.footer-flower {
+    font-size: 27px;
+    margin-right: 7px;
+}
+
+.site-footer p {
+    margin: 7px 0 20px;
+    font-size: 13px;
+}
+
+.footer-line {
+    max-width: 300px;
+    height: 1px;
+    background: #DCCFE7;
+    margin: 20px auto;
+}
+
+.site-footer small {
+    font-size: 11px;
+}
+
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 700px) {
+
+    .site-header {
+        padding: 14px 18px;
+    }
+
+    .header-content {
+        justify-content: center;
+    }
+
+    .brand {
+        font-size: 23px;
+    }
+
+    .brand-flower {
+        width: 43px;
+        height: 43px;
+    }
+
+    nav {
+        justify-content: center;
+        gap: 5px;
+    }
+
+    nav a {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 65px 20px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .container {
+        margin: 40px auto;
+        padding: 0 16px;
+    }
+
+    .section-heading {
+        align-items: start;
+    }
+
+    .section-heading h2 {
+        font-size: 29px;
+    }
+
+    .events {
+        grid-template-columns: 1fr;
+    }
+
+    .event {
+        padding: 21px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-actions .button {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* =========================
+   PASTEL FLORAL - LOGIN & REGISTER
+   ========================= */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+        radial-gradient(circle at 10% 20%, #fce7f3 0, transparent 28%),
+        radial-gradient(circle at 90% 75%, #e8e4ff 0, transparent 30%),
+        #fffaf5;
+}
+
+.pastel-header {
+    background: linear-gradient(120deg, #f8dce8, #e9e2fa, #dff2e8);
+    color: #51445f;
+    padding: 18px 7%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -43,387 +676,768 @@ header {
     flex-wrap: wrap;
 }
 
-.brand {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-nav {
+.brand-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-nav a {
-    color: var(--white);
+    gap: 10px;
+    color: #51445f;
+    font-size: 21px;
+    font-weight: bold;
     text-decoration: none;
-    padding: 10px 14px;
-    border-radius: 8px;
-    transition: background 0.2s;
 }
 
-nav a:hover,
-nav a.active {
-    background: #ffffff25;
+.gold-flower {
+    color: #c69b32;
+    font-size: 35px;
 }
 
-/* Seksioni hyrës */
+.brand-amp {
+    color: #bd83a6;
+}
 
-.hero {
-    background: linear-gradient(135deg, #1d4ed8, #647ff0);
-    color: var(--white);
-    padding: 45px 20px;
+.pastel-header nav a {
+    color: #51445f;
+}
+
+.pastel-header nav a:hover,
+.pastel-header nav .nav-highlight {
+    background: #ffffffa8;
+}
+
+.auth-container {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    margin: auto;
+    padding: 45px 20px 25px;
+}
+
+.auth-card {
+    position: relative;
+    background: #ffffffed;
+    border: 1px solid #f0dce9;
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 15px 45px #92769b20;
+}
+
+.auth-flower {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff2d5;
+    color: #c69b32;
+    font-size: 42px;
+}
+
+.auth-heading {
     text-align: center;
+    margin-bottom: 25px;
 }
 
-.hero h1 {
-    font-size: clamp(27px, 4vw, 40px);
-    margin: 0 0 12px;
-    line-height: 1.3;
+.auth-heading h1 {
+    color: #66516f;
+    font-size: 27px;
+    margin: 8px 0;
 }
 
-.hero p {
-    max-width: 700px;
-    margin: 0 auto;
-    color: #edf2ff;
+.auth-heading p {
+    color: #918397;
+    margin: 0;
 }
 
-/* Përmbajtja dhe kartat */
-
-.container {
-    max-width: 1200px;
-    margin: 35px auto;
-    padding: 0 22px;
+.eyebrow {
+    color: #bd83a6;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 3px;
 }
 
-.form-card,
-.event,
-.content-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.auth-form .field label {
+    color: #68596e;
+}
+
+.auth-form input {
+    background: #fffcff;
+    border: 1px solid #eaddeb;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.auth-form input:focus {
+    border-color: #c69bc8;
+    box-shadow: 0 0 0 3px #e9d8f580;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(110deg, #dba9c6, #b8a8df);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px #b99acb55;
+}
+
+.auth-button span {
+    margin-left: 8px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 25px 0;
+    color: #b5a5b8;
+    font-size: 11px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee1ed;
+}
+
+.auth-bottom {
+    text-align: center;
+    color: #8e8192;
+    margin-bottom: 0;
+}
+
+.auth-bottom a {
+    color: #ae79a5;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-bottom a:hover {
+    text-decoration: underline;
+}
+
+.auth-note {
+    text-align: center;
+    color: #b18b9f;
+    font-size: 13px;
+    margin-top: 22px;
+}
+
+.auth-decoration {
+    position: absolute;
+    color: #d6b76b;
+    opacity: 0.55;
+    font-size: 55px;
+}
+
+.decoration-one {
+    top: 15px;
+    left: -15px;
+    transform: rotate(-20deg);
+}
+
+.decoration-two {
+    bottom: 100px;
+    right: -10px;
+    font-size: 42px;
+    transform: rotate(20deg);
+}
+
+.pastel-footer {
+    background: #f8edf4;
+    border-top: 1px solid #f0dce9;
+    padding: 17px;
+    text-align: center;
+    color: #917c91;
+    font-size: 13px;
+}
+
+.pastel-footer p {
+    margin: 0;
+}
+
+.register-card {
+    padding: 30px 35px;
+}
+
+.register-container {
+    max-width: 680px;
+}
+
+@media (max-width: 600px) {
+    .pastel-header {
+        padding: 15px 20px;
+        justify-content: center;
+    }
+
+    .brand-link {
+        font-size: 18px;
+    }
+
+    .auth-container {
+        padding: 30px 15px;
+    }
+
+    .auth-card {
+        padding: 25px 20px;
+    }
+
+    .auth-heading h1 {
+        font-size: 23px;
+    }
+
+    .auth-decoration {
+        display: none;
+    }
+}
+
+/* ===== PASTEL FLORAL - CREATE EVENT ===== */
+
+.event-create-container {
+    max-width: 900px;
+    margin: 55px auto;
+    padding: 20px;
+}
+
+.event-create-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #f1dce8;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 12px 35px rgba(120, 91, 120, 0.10);
+}
+
+.event-flower {
+    text-align: center;
+    font-size: 42px;
+    color: #d9ad53;
+    margin-bottom: 8px;
+}
+
+.pastel-label {
+    display: inline-block;
+    color: #a36b91;
+    background: #f8eaf2;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.event-create-card .section-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.event-create-card .section-heading h1 {
+    color: #66516d;
+    margin-bottom: 10px;
+}
+
+.event-create-card .muted {
+    color: #93849a;
+}
+
+.pastel-event-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.pastel-event-form .field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.pastel-event-form .full-width {
+    grid-column: 1 / -1;
+}
+
+.pastel-event-form label {
+    color: #715c78;
+    font-weight: 600;
+}
+
+.pastel-event-form input,
+.pastel-event-form select,
+.pastel-event-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border: 1px solid #eadce9;
+    border-radius: 12px;
+    background: #fdfafd;
+    color: #62556a;
+    font: inherit;
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.pastel-event-form input:focus,
+.pastel-event-form select:focus,
+.pastel-event-form textarea:focus {
+    border-color: #c69abd;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(198, 154, 189, 0.15);
+}
+
+.pastel-event-form textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.event-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.event-actions .auth-button {
+    border: none;
+    cursor: pointer;
+}
+
+.event-actions .auth-button:hover {
+    transform: translateY(-2px);
+}
+
+.event-form-note {
+    text-align: center;
+    color: #a394a8;
+    font-size: 13px;
+    margin-top: 25px;
+}
+
+.pastel-header .active {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 20px;
+}
+
+@media (max-width: 650px) {
+    .event-create-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    .event-create-card {
+        padding: 25px 18px;
+    }
+
+    .pastel-event-form {
+        grid-template-columns: 1fr;
+    }
+
+    .pastel-event-form .full-width {
+        grid-column: auto;
+    }
+
+    .event-actions {
+        grid-column: auto;
+        flex-direction: column;
+    }
+
+    .event-actions .button {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+
+/* ===== PASTEL FLORAL - RESERVATIONS ===== */
+
+.reservations-container {
+    max-width: 1250px;
+    margin: 55px auto;
+    padding: 20px;
+}
+
+.reservations-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.heading-flower {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.reservations-heading h1 {
+    color: #66516d;
+    font-size: 34px;
+    margin: 12px 0;
+}
+
+.reservations-heading p {
+    color: #93849a;
+}
+
+.reservations-card {
+    background: #fff;
+    border: 1px solid #f1dce8;
+    border-radius: 22px;
     padding: 25px;
-    box-shadow: 0 8px 28px #1720330b;
+    box-shadow: 0 12px 35px rgba(120, 91, 120, 0.08);
 }
 
-.form-card {
-    max-width: 760px;
-    margin: 0 auto;
-}
-
-.form-card h2,
-.content-card h2 {
-    color: #172554;
-    margin-top: 0;
-}
-
-.section-heading {
+.reservations-card-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 
-.section-heading h2 {
-    margin: 0 0 8px;
+.reservations-card-heading h2 {
+    color: #715c78;
+    font-size: 21px;
 }
 
-.muted,
-.intro {
-    color: var(--muted);
+.reservation-count {
+    background: #f8eaf2;
+    color: #a36b91;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
-/* Formularët */
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+.pastel-table-container {
+    overflow-x: auto;
+    border-radius: 14px;
 }
 
-.field {
-    min-width: 0;
-}
-
-.field.full {
-    grid-column: 1 / -1;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #334155;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-input,
-select,
-textarea {
-    display: block;
+.pastel-table {
     width: 100%;
-    padding: 12px 13px;
-    font: inherit;
-    color: var(--text);
-    background: var(--white);
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    border-collapse: collapse;
+    min-width: 950px;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px #2563eb20;
+.pastel-table thead {
+    background: #f8edf4;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 100px;
+.pastel-table th {
+    color: #795e78;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 17px 13px;
+    text-align: left;
+    white-space: nowrap;
 }
 
-/* Butonat dhe lidhjet */
-
-.button,
-.add-link,
-.reserve-link,
-button[type="submit"] {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 18px;
-    border: none;
-    border-radius: 9px;
-    font: inherit;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+.pastel-table td {
+    color: #716477;
+    padding: 17px 13px;
+    border-bottom: 1px solid #f1e8ef;
+    font-size: 13px;
 }
 
-.button-primary,
-.add-link,
-.reserve-link,
-button[type="submit"] {
-    background: var(--primary);
-    color: var(--white);
+.pastel-table tbody tr {
+    transition: background 0.2s ease;
 }
 
-.button-primary:hover,
-.add-link:hover,
-.reserve-link:hover,
-button[type="submit"]:hover {
-    background: var(--primary-dark);
+.pastel-table tbody tr:hover {
+    background: #fdf8fc;
 }
 
-.button-secondary {
-    background: #eef2ff;
-    color: var(--nav-blue);
+.pastel-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
-.button-secondary:hover {
-    background: #e0e7ff;
+.event-name {
+    color: #765875 !important;
+    font-weight: 700;
 }
 
-.actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 25px;
+.price-cell {
+    color: #a36b91 !important;
+    font-weight: 700;
 }
 
-/* Mesazhet */
-
-.message,
-.alert,
-.error,
-.success,
-.empty {
-    padding: 14px 16px;
-    border-radius: 9px;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.message.success,
-.alert.success,
-.success {
-    background: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
-}
-
-.message.error,
-.alert.error,
-.error {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
-}
-
-.empty {
-    background: var(--white);
-    color: var(--muted);
-    border: 1px solid var(--border);
-}
-
-/* Eventet */
-
-.events {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 24px;
-}
-
-.event {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.event:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px #17203314;
-}
-
-.event h2,
-.event h3 {
-    color: #172554;
-    overflow-wrap: anywhere;
-}
-
-.category {
+.status-badge {
     display: inline-block;
-    align-self: flex-start;
-    background: #e8efff;
-    color: var(--nav-blue);
     padding: 7px 12px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.confirmed {
+    background: #e8f5ec;
+    color: #43865b;
+}
+
+.status-badge.cancelled {
+    background: #fbe9ed;
+    color: #bd687d;
+}
+
+.status-badge.other-status {
+    background: #f0eafa;
+    color: #8066a2;
+}
+
+.cancel-button {
+    background: #f8e8ef;
+    color: #ae617e;
+    border: 1px solid #edcfdb;
+    padding: 9px 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+.cancel-button:hover {
+    background: #f2d5e2;
+    transform: translateY(-1px);
+}
+
+.no-action {
+    color: #b7aab9;
+}
+
+.pastel-empty {
+    text-align: center;
+    padding: 55px 25px;
+    background: #fff;
+    border: 1px solid #f1dce8;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(120, 91, 120, 0.08);
+}
+
+.empty-flower {
+    color: #d9ad53;
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.pastel-empty h2 {
+    color: #715c78;
     margin-bottom: 12px;
 }
 
-.description {
-    color: var(--muted);
-    overflow-wrap: anywhere;
+.pastel-empty p {
+    color: #93849a;
+    margin-bottom: 25px;
 }
 
-.price {
-    font-size: 25px;
-    font-weight: bold;
-    color: var(--success);
-}
-
-.tickets {
-    color: var(--muted);
-    font-size: 14px;
-}
-
-.sold-out {
-    background: #fff1f2;
-    color: #be123c;
-    padding: 12px;
-    text-align: center;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-/* Tabelat */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--white);
-}
-
-th,
-td {
-    text-align: left;
-    padding: 13px;
-    border-bottom: 1px solid var(--border);
-}
-
-th {
-    background: #eef2ff;
-    color: #172554;
-}
-
-tr:hover td {
-    background: #f8faff;
-}
-
-/* Fundi i faqes */
-
-footer {
-    margin-top: 55px;
-    padding: 24px 15px;
-    text-align: center;
-    color: var(--muted);
-    background: var(--white);
-    border-top: 1px solid var(--border);
-}
-
-/* Përshtatja për telefona */
-
-@media (max-width: 600px) {
-    header {
-        padding: 20px;
+@media (max-width: 650px) {
+    .reservations-container {
+        margin: 25px auto;
+        padding: 12px;
     }
 
-    nav {
-        gap: 6px;
+    .reservations-heading h1 {
+        font-size: 27px;
     }
 
-    nav a {
-        padding: 8px 10px;
+    .reservations-card {
+        padding: 15px;
     }
 
-    .hero {
-        padding: 32px 18px;
-    }
-
-    .container {
-        margin-top: 22px;
-        padding: 0 14px;
-    }
-
-    .form-card,
-    .content-card,
-    .event {
-        padding: 20px 16px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .field.full {
-        grid-column: auto;
-    }
-
-    .actions {
+    .reservations-card-heading {
+        align-items: flex-start;
         flex-direction: column;
     }
 
-    .actions .button,
-    .actions button {
-        width: 100%;
-    }
-
-    table {
-        font-size: 13px;
-    }
-
-    th,
-    td {
-        padding: 9px;
+    .pastel-empty {
+        padding: 40px 18px;
     }
 }
+
+/* ===== PASTEL FLORAL - RESERVE TICKETS ===== */
+
+.reservation-form-container {
+    max-width: 750px;
+    margin: 55px auto;
+    padding: 20px;
+}
+
+.reservation-form-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #f1dce8;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 12px 35px rgba(120, 91, 120, 0.10);
+}
+
+.reservation-form-card .section-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.reservation-form-card .section-heading h1 {
+    color: #66516d;
+    margin: 12px 0;
+}
+
+.reservation-form-card .muted {
+    color: #93849a;
+}
+
+.reservation-event-info {
+    background: linear-gradient(135deg, #fff5f9, #f4effb, #f0faf5);
+    border: 1px solid #efdfeb;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 28px;
+}
+
+.reservation-event-icon {
+    color: #d9ad53;
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.reservation-event-info h2 {
+    text-align: center;
+    color: #715c78;
+    margin: 0 0 25px;
+}
+
+.reservation-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 5px;
+    border-top: 1px solid #eadce9;
+    color: #806f84;
+}
+
+.reservation-info-row strong {
+    color: #a36b91;
+}
+
+.pastel-reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pastel-reservation-form .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pastel-reservation-form label {
+    color: #715c78;
+    font-weight: 600;
+}
+
+.pastel-reservation-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #eadce9;
+    border-radius: 12px;
+    background: #fdfafd;
+    color: #62556a;
+    font: inherit;
+    outline: none;
+    transition: 0.25s ease;
+}
+
+.pastel-reservation-form input:focus {
+    border-color: #c69abd;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(198, 154, 189, 0.15);
+}
+
+.field-help {
+    color: #a394a8;
+    font-size: 12px;
+}
+
+.reservation-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 10px;
+}
+
+.reservation-actions .button {
+    text-align: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.reservation-actions .auth-button {
+    border: none;
+    cursor: pointer;
+}
+
+.reservation-actions .auth-button:hover {
+    transform: translateY(-2px);
+}
+
+.pastel-sold-out {
+    background: #fbe9ed;
+    border: 1px solid #edcfdb;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    color: #ae617e;
+    margin-bottom: 20px;
+}
+
+.reservation-back-link {
+    text-align: center;
+}
+
+.reservation-form-card .pastel-empty {
+    text-align: center;
+}
+
+@media (max-width: 650px) {
+    .reservation-form-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    .reservation-form-card {
+        padding: 25px 18px;
+    }
+
+    .reservation-event-info {
+        padding: 20px 15px;
+    }
+
+    .reservation-info-row {
+        font-size: 14px;
+    }
+
+    .reservation-actions {
+        width: 100%;
+    }
+}
+
