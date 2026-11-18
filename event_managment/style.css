@@ -1440,3 +1440,314 @@ nav a.nav-highlight:hover {
         width: 100%;
     }
 }
+
+/* =========================================
+   PERSONALIZIMI I TEMAVE
+   ========================================= */
+
+/* DARK THEME */
+body[data-theme="dark"] {
+    --background: #171923;
+    --white: #242735;
+    --text: #ECECF2;
+    --muted: #B0B3C2;
+    --border: #3A3D4D;
+    --primary: #9B83D5;
+    --primary-dark: #8068BA;
+    --lavender: #353047;
+    --pink: #493342;
+    --mint: #293F38;
+    --gold: #D6B96B;
+}
+
+/* OCEAN BLUE THEME */
+body[data-theme="ocean-blue"] {
+    --background: #EFF7FC;
+    --white: #FFFFFF;
+    --text: #244052;
+    --muted: #637F91;
+    --border: #D5E7F0;
+    --primary: #3687B5;
+    --primary-dark: #286A94;
+    --lavender: #DDECF6;
+    --pink: #E5F0F7;
+    --mint: #DDF0EB;
+    --gold: #C6A45A;
+}
+
+/* SAGE GREEN THEME */
+body[data-theme="sage-green"] {
+    --background: #F1F5EF;
+    --white: #FFFFFF;
+    --text: #34463A;
+    --muted: #758477;
+    --border: #DCE6D8;
+    --primary: #789879;
+    --primary-dark: #5E7D60;
+    --lavender: #E2EBDD;
+    --pink: #F0E9E2;
+    --mint: #DCEBDD;
+    --gold: #B99A55;
+}
+
+/* ELEMENTET E PËRBASHKËTA PËR TEMAT E REJA */
+body[data-theme="dark"],
+body[data-theme="ocean-blue"],
+body[data-theme="sage-green"] {
+    background: var(--background);
+    color: var(--text);
+}
+
+body[data-theme="dark"] .site-header,
+body[data-theme="ocean-blue"] .site-header,
+body[data-theme="sage-green"] .site-header,
+body[data-theme="dark"] .pastel-header,
+body[data-theme="ocean-blue"] .pastel-header,
+body[data-theme="sage-green"] .pastel-header {
+    background: var(--white);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+
+body[data-theme="dark"] nav a,
+body[data-theme="ocean-blue"] nav a,
+body[data-theme="sage-green"] nav a,
+body[data-theme="dark"] .brand-link,
+body[data-theme="ocean-blue"] .brand-link,
+body[data-theme="sage-green"] .brand-link {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .hero,
+body[data-theme="ocean-blue"] .hero,
+body[data-theme="sage-green"] .hero {
+    background: var(--lavender);
+}
+
+body[data-theme="dark"] .hero h1,
+body[data-theme="ocean-blue"] .hero h1,
+body[data-theme="sage-green"] .hero h1,
+body[data-theme="dark"] .section-heading h2,
+body[data-theme="ocean-blue"] .section-heading h2,
+body[data-theme="sage-green"] .section-heading h2 {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .hero p,
+body[data-theme="ocean-blue"] .hero p,
+body[data-theme="sage-green"] .hero p {
+    color: var(--muted);
+}
+
+body[data-theme="dark"] .event,
+body[data-theme="ocean-blue"] .event,
+body[data-theme="sage-green"] .event,
+body[data-theme="dark"] .empty,
+body[data-theme="ocean-blue"] .empty,
+body[data-theme="sage-green"] .empty,
+body[data-theme="dark"] .auth-card,
+body[data-theme="ocean-blue"] .auth-card,
+body[data-theme="sage-green"] .auth-card,
+body[data-theme="dark"] .event-create-card,
+body[data-theme="ocean-blue"] .event-create-card,
+body[data-theme="sage-green"] .event-create-card,
+body[data-theme="dark"] .reservations-card,
+body[data-theme="ocean-blue"] .reservations-card,
+body[data-theme="sage-green"] .reservations-card,
+body[data-theme="dark"] .reservation-form-card,
+body[data-theme="ocean-blue"] .reservation-form-card,
+body[data-theme="sage-green"] .reservation-form-card {
+    background: var(--white);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .event h3,
+body[data-theme="ocean-blue"] .event h3,
+body[data-theme="sage-green"] .event h3,
+body[data-theme="dark"] .empty h3,
+body[data-theme="ocean-blue"] .empty h3,
+body[data-theme="sage-green"] .empty h3,
+body[data-theme="dark"] .auth-heading h1,
+body[data-theme="ocean-blue"] .auth-heading h1,
+body[data-theme="sage-green"] .auth-heading h1,
+body[data-theme="dark"] .reservations-heading h1,
+body[data-theme="ocean-blue"] .reservations-heading h1,
+body[data-theme="sage-green"] .reservations-heading h1 {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .event-details,
+body[data-theme="ocean-blue"] .event-details,
+body[data-theme="sage-green"] .event-details,
+body[data-theme="dark"] .reservation-event-info,
+body[data-theme="ocean-blue"] .reservation-event-info,
+body[data-theme="sage-green"] .reservation-event-info {
+    background: var(--background);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .event-details p,
+body[data-theme="ocean-blue"] .event-details p,
+body[data-theme="sage-green"] .event-details p,
+body[data-theme="dark"] .reservation-info-row,
+body[data-theme="ocean-blue"] .reservation-info-row,
+body[data-theme="sage-green"] .reservation-info-row {
+    color: var(--muted);
+}
+
+body[data-theme="dark"] input,
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea,
+body[data-theme="ocean-blue"] input,
+body[data-theme="ocean-blue"] select,
+body[data-theme="ocean-blue"] textarea,
+body[data-theme="sage-green"] input,
+body[data-theme="sage-green"] select,
+body[data-theme="sage-green"] textarea {
+    background: var(--background);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] label,
+body[data-theme="ocean-blue"] label,
+body[data-theme="sage-green"] label {
+    color: var(--text);
+}
+
+body[data-theme="dark"] .site-footer,
+body[data-theme="ocean-blue"] .site-footer,
+body[data-theme="sage-green"] .site-footer,
+body[data-theme="dark"] .pastel-footer,
+body[data-theme="ocean-blue"] .pastel-footer,
+body[data-theme="sage-green"] .pastel-footer {
+    background: var(--white);
+    color: var(--muted);
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .pastel-table thead,
+body[data-theme="ocean-blue"] .pastel-table thead,
+body[data-theme="sage-green"] .pastel-table thead {
+    background: var(--lavender);
+}
+
+body[data-theme="dark"] .pastel-table th,
+body[data-theme="ocean-blue"] .pastel-table th,
+body[data-theme="sage-green"] .pastel-table th,
+body[data-theme="dark"] .pastel-table td,
+body[data-theme="ocean-blue"] .pastel-table td,
+body[data-theme="sage-green"] .pastel-table td {
+    color: var(--text);
+    border-color: var(--border);
+}
+
+body[data-theme="dark"] .pastel-table tbody tr:hover,
+body[data-theme="ocean-blue"] .pastel-table tbody tr:hover,
+body[data-theme="sage-green"] .pastel-table tbody tr:hover {
+    background: var(--lavender);
+}
+
+body[data-theme="dark"] .button-primary,
+body[data-theme="dark"] .reserve-link,
+body[data-theme="ocean-blue"] .button-primary,
+body[data-theme="ocean-blue"] .reserve-link,
+body[data-theme="sage-green"] .button-primary,
+body[data-theme="sage-green"] .reserve-link {
+    background: var(--primary);
+}
+
+body[data-theme="dark"] .button-primary:hover,
+body[data-theme="dark"] .reserve-link:hover,
+body[data-theme="ocean-blue"] .button-primary:hover,
+body[data-theme="ocean-blue"] .reserve-link:hover,
+body[data-theme="sage-green"] .button-primary:hover,
+body[data-theme="sage-green"] .reserve-link:hover {
+    background: var(--primary-dark);
+}
+
+/* DARK THEME - AUTH BACKGROUND */
+body[data-theme="dark"] .auth-page {
+    background: var(--background);
+}
+
+body[data-theme="ocean-blue"] .auth-page {
+    background: #EAF4FA;
+}
+
+body[data-theme="sage-green"] .auth-page {
+    background: #EAF1E7;
+}
+/* =========================================
+   RREGULLIMET SHTESË PËR TEMAT
+========================================= */
+
+/* Ngjyrat e titujve dhe teksteve */
+body[data-theme="dark"] .event h3,
+body[data-theme="dark"] .empty h3,
+body[data-theme="dark"] .reservations-heading h1,
+body[data-theme="dark"] .reservations-card-heading h2,
+body[data-theme="dark"] .reservation-event-info h2,
+body[data-theme="dark"] .event-create-card .section-heading h1 {
+    color: var(--text);
+}
+
+/* Kartat dhe përmbajtja */
+body[data-theme="dark"] .pastel-empty,
+body[data-theme="dark"] .reservation-form-card,
+body[data-theme="dark"] .event-create-card {
+    background: var(--white);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+/* Tekstet e formularëve */
+body[data-theme="dark"] .auth-form label,
+body[data-theme="dark"] .pastel-event-form label,
+body[data-theme="dark"] .pastel-reservation-form label {
+    color: var(--text);
+}
+
+/* Tabelat */
+body[data-theme="dark"] .pastel-table tbody tr:hover {
+    background: var(--lavender);
+}
+
+/* Tema Ocean Blue dhe Sage Green */
+body[data-theme="ocean-blue"] .pastel-empty,
+body[data-theme="ocean-blue"] .reservation-form-card,
+body[data-theme="ocean-blue"] .event-create-card,
+body[data-theme="sage-green"] .pastel-empty,
+body[data-theme="sage-green"] .reservation-form-card,
+body[data-theme="sage-green"] .event-create-card {
+    background: var(--white);
+    border-color: var(--border);
+    color: var(--text);
+}
+/* THEME SELECTOR */
+
+.theme-form select {
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--background);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.theme-form select:focus {
+    border-color: var(--primary);
+}
+
+@media (max-width: 700px) {
+    .theme-form {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+}

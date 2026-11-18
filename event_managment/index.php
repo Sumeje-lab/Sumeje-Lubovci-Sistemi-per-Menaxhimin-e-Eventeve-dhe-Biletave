@@ -33,7 +33,21 @@ try {
 
 $isLoggedIn = isset($_SESSION["user_id"]);
 $isAdmin = $isLoggedIn && (($_SESSION["user_role"] ?? "") === "admin");
+$allowedThemes = [
+    "pastel-floral",
+    "dark",
+    "ocean-blue",
+    "sage-green"
+];
 
+$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
+
+if (!in_array($currentTheme, $allowedThemes, true)) {
+    $currentTheme = "pastel-floral";
+}
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
 function h($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
@@ -50,7 +64,7 @@ function h($value) {
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body data-theme="<?= h($currentTheme) ?>">
 
 <!-- HEADER -->
 <header class="site-header">
@@ -95,6 +109,41 @@ function h($value) {
                 <?php endif; ?>
 
                 <a href="logout.php">Dil nga llogaria</a>
+                <form action="change_theme.php" method="POST" class="theme-form">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= h($_SESSION["csrf_token"]) ?>"
+    >
+
+    <select
+        name="theme"
+        onchange="this.form.submit()"
+        aria-label="Zgjidh temën e faqes"
+    >
+        <option value="pastel-floral"
+            <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+            Pastel Floral
+        </option>
+
+        <option value="dark"
+            <?= $currentTheme === "dark" ? "selected" : "" ?>>
+            Dark
+        </option>
+
+        <option value="ocean-blue"
+            <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+            Ocean Blue
+        </option>
+
+        <option value="sage-green"
+            <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+            Sage Green
+        </option>
+    </select>
+
+</form>
 
             <?php else: ?>
                 <a href="login.php">Kyçu</a>

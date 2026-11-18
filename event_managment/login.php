@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         try {
             $stmt = $pdo->prepare(
-                "SELECT id, name, email, password_hash, role
+                "SELECT id, name, email, password_hash, role, theme
                  FROM users WHERE email = ?"
             );
             $stmt->execute([$email]);
@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_SESSION["user_name"] = $user["name"];
                 $_SESSION["user_email"] = $user["email"];
                 $_SESSION["user_role"] = $user["role"];
+                $_SESSION["theme"] = $user["theme"];
 
                 header("Location: index.php");
                 exit;
