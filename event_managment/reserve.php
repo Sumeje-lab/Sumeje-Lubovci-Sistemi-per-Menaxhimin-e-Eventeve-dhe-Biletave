@@ -9,6 +9,56 @@ if (!isset($_SESSION["user_id"])) {
     exit;
 }
 
+// Temat e lejuara
+$allowedThemes = [
+    "pastel-floral",
+    "dark",
+    "ocean-blue",
+    "sage-green"
+];
+
+$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
+
+if (!in_array($currentTheme, $allowedThemes, true)) {
+    $currentTheme = "pastel-floral";
+}
+
+// Funksioni për sigurinë e HTML
+function h($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+}
+
+// Token CSRF për zgjedhësin e temave
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
+// Ikona SVG e lules
+function flowerIcon($class = "") {
+    return '
+    <svg class="' . h($class) . '" viewBox="0 0 100 100"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true">
+        <g fill="none" stroke="currentColor"
+           stroke-width="3" stroke-linecap="round"
+           stroke-linejoin="round">
+            <ellipse cx="50" cy="25" rx="10" ry="22"/>
+            <ellipse cx="50" cy="75" rx="10" ry="22"/>
+            <ellipse cx="25" cy="50" rx="22" ry="10"/>
+            <ellipse cx="75" cy="50" rx="22" ry="10"/>
+            <ellipse cx="32" cy="32" rx="10" ry="22"
+                     transform="rotate(-45 32 32)"/>
+            <ellipse cx="68" cy="32" rx="10" ry="22"
+                     transform="rotate(45 68 32)"/>
+            <ellipse cx="32" cy="68" rx="10" ry="22"
+                     transform="rotate(45 32 68)"/>
+            <ellipse cx="68" cy="68" rx="10" ry="22"
+                     transform="rotate(-45 68 68)"/>
+            <circle cx="50" cy="50" r="7" fill="currentColor"/>
+        </g>
+    </svg>';
+}
+
 $message = "";
 $messageType = "success";
 $event = null;
@@ -146,35 +196,65 @@ if ($eventId && $eventId > 0 && !$event) {
 
     <title>Rezervo bileta</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
-<body class="auth-page">
+<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
 
-<header class="pastel-header">
-
+<header class="site-header">
     <div class="header-content">
 
-        <a href="index.php" class="brand-link">
-            <span class="gold-flower">✿</span>
-            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        <a href="index.php" class="brand">
+            <?= flowerIcon("brand-flower") ?>
+            <span>evente<span class="brand-amp">&</span>bileta</span>
         </a>
 
         <nav>
             <a href="index.php">Kryefaqja</a>
             <a href="reservations.php">Rezervimet e mia</a>
             <a href="logout.php">Dil nga llogaria</a>
+
+            <form action="change_theme.php" method="POST" class="theme-form">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= h($_SESSION["csrf_token"]) ?>"
+                >
+
+                <select
+                    name="theme"
+                    onchange="this.form.submit()"
+                    aria-label="Zgjidh temën e faqes"
+                >
+                    <option value="pastel-floral" <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+                        Pastel Floral
+                    </option>
+
+                    <option value="dark" <?= $currentTheme === "dark" ? "selected" : "" ?>>
+                        Dark
+                    </option>
+
+                    <option value="ocean-blue" <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+                        Ocean Blue
+                    </option>
+
+                    <option value="sage-green" <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+                        Sage Green
+                    </option>
+                </select>
+            </form>
         </nav>
 
     </div>
-
 </header>
 
 <main class="container reservation-form-container">
 
     <section class="form-card reservation-form-card">
 
-        <div class="event-flower">✿</div>
+        <div class="event-flower">
+            <?= flowerIcon("brand-flower") ?>
+        </div>
 
         <div class="section-heading">
 
@@ -190,8 +270,8 @@ if ($eventId && $eventId > 0 && !$event) {
 
         <?php if ($message !== ""): ?>
 
-            <div class="message <?= htmlspecialchars($messageType, ENT_QUOTES, "UTF-8") ?>">
-                <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
+            <div class="message <?= h($messageType) ?>">
+                <?= h($message) ?>
             </div>
 
         <?php endif; ?>
@@ -200,10 +280,12 @@ if ($eventId && $eventId > 0 && !$event) {
 
             <div class="reservation-event-info">
 
-                <div class="reservation-event-icon">✿</div>
+                <div class="reservation-event-icon">
+                    <?= flowerIcon("brand-flower") ?>
+                </div>
 
                 <h2>
-                    <?= htmlspecialchars($event["title"], ENT_QUOTES, "UTF-8") ?>
+                    <?= h($event["title"]) ?>
                 </h2>
 
                 <div class="reservation-info-row">
@@ -294,7 +376,9 @@ if ($eventId && $eventId > 0 && !$event) {
 
             <div class="pastel-empty">
 
-                <div class="empty-flower">✿</div>
+                <div class="empty-flower">
+                    <?= flowerIcon("brand-flower") ?>
+                </div>
 
                 <h2>Eventi nuk u gjet</h2>
 
@@ -314,14 +398,12 @@ if ($eventId && $eventId > 0 && !$event) {
 
 </main>
 
-<footer class="pastel-footer">
-
+<footer class="site-footer">
     <p>
-        <span class="gold-flower">✿</span>
+        <?= flowerIcon("brand-flower") ?>
         &copy; <?= date("Y") ?> Sistemi për Menaxhimin e Eventeve dhe Biletave
-        <span class="gold-flower">✿</span>
+        <?= flowerIcon("brand-flower") ?>
     </p>
-
 </footer>
 
 </body>

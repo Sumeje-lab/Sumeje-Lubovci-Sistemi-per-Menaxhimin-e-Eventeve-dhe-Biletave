@@ -24,6 +24,14 @@ if (
     exit("Kërkesa është e pavlefshme. Kthehu te rezervimet dhe provo përsëri.");
 }
 
+// Kontrollojmë ID-në e përdoruesit.
+$userId = filter_var($_SESSION["user_id"], FILTER_VALIDATE_INT);
+
+if (!$userId || $userId < 1) {
+    header("Location: login.php");
+    exit;
+}
+
 // Kontrollojmë ID-në e rezervimit.
 $reservationId = filter_input(
     INPUT_POST,
@@ -50,7 +58,7 @@ try {
 
     $stmt->execute([
         $reservationId,
-        $_SESSION["user_id"]
+        $userId
     ]);
 
     $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -80,7 +88,7 @@ try {
 
     $stmt->execute([
         $reservationId,
-        $_SESSION["user_id"]
+        $userId
     ]);
 
     // Rikthejmë biletat në dispozicion.

@@ -3,18 +3,34 @@
 session_start();
 require_once "db.php";
 
+// Temat e lejuara
+$allowedThemes = [
+    "pastel-floral",
+    "dark",
+    "ocean-blue",
+    "sage-green"
+];
+
+$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
+
+if (!in_array($currentTheme, $allowedThemes, true)) {
+    $currentTheme = "pastel-floral";
+}
+
+// Kontrollojmë nëse përdoruesi është kyçur.
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
 }
 
-// Krijojmë tokenin e sigurisë për formularin e anulimit.
+// Krijojmë tokenin CSRF.
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
 $userId = (int) $_SESSION["user_id"];
 
+// Marrim rezervimet e përdoruesit.
 $stmt = $pdo->prepare(
     "SELECT
         r.id,
@@ -33,10 +49,38 @@ $stmt = $pdo->prepare(
 $stmt->execute([$userId]);
 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Funksioni për sigurinë e tekstit.
 function h($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
 }
 
+// Funksioni për logon me lulen SVG.
+function flowerIcon($class = "") {
+    return '
+    <svg class="' . h($class) . '" viewBox="0 0 100 100"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true">
+        <g fill="none" stroke="currentColor"
+           stroke-width="3" stroke-linecap="round"
+           stroke-linejoin="round">
+            <ellipse cx="50" cy="25" rx="10" ry="22"/>
+            <ellipse cx="50" cy="75" rx="10" ry="22"/>
+            <ellipse cx="25" cy="50" rx="22" ry="10"/>
+            <ellipse cx="75" cy="50" rx="22" ry="10"/>
+            <ellipse cx="32" cy="32" rx="10" ry="22"
+                     transform="rotate(-45 32 32)"/>
+            <ellipse cx="68" cy="32" rx="10" ry="22"
+                     transform="rotate(45 68 32)"/>
+            <ellipse cx="32" cy="68" rx="10" ry="22"
+                     transform="rotate(45 32 68)"/>
+            <ellipse cx="68" cy="68" rx="10" ry="22"
+                     transform="rotate(-45 68 68)"/>
+            <circle cx="50" cy="50" r="7" fill="currentColor"/>
+        </g>
+    </svg>';
+}
+
+// Mesazhet e rezervimeve.
 $messages = [
     "cancelled" => "Rezervimi u anulua me sukses dhe biletat u kthyen në dispozicion.",
     "invalid" => "Numri i rezervimit nuk është i vlefshëm.",
@@ -50,21 +94,27 @@ $errorCode = $_GET["error"] ?? "";
 
 <!DOCTYPE html>
 <html lang="sq">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rezervimet e mia</title>
-    <link rel="stylesheet" href="style.css">
+
+    <title>Rezervimet e mia | evente&bileta</title>
+
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
-<body class="auth-page">
+<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
 
-<header class="pastel-header">
+<!-- HEADER -->
+<header class="site-header">
     <div class="header-content">
 
-        <a href="index.php" class="brand-link">
-            <span class="gold-flower">✿</span>
-            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        <a href="index.php" class="brand">
+
+            <?= flowerIcon("brand-flower") ?>
+
+            <span>evente<span class="brand-amp">&</span>bileta</span>
         </a>
 
         <nav>
@@ -75,19 +125,60 @@ $errorCode = $_GET["error"] ?? "";
             </a>
 
             <?php if (($_SESSION["user_role"] ?? "") === "admin"): ?>
-                <a href="create_event.php">Krijo event</a>
+                <a href="create_event.php" class="nav-highlight">
+                    Krijo event
+                </a>
             <?php endif; ?>
 
             <a href="logout.php">Dil nga llogaria</a>
+
+            <form action="change_theme.php" method="POST" class="theme-form">
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= h($_SESSION["csrf_token"]) ?>"
+                >
+
+                <select
+                    name="theme"
+                    onchange="this.form.submit()"
+                    aria-label="Zgjidh temën e faqes"
+                >
+                    <option value="pastel-floral"
+                        <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+                        Pastel Floral
+                    </option>
+
+                    <option value="dark"
+                        <?= $currentTheme === "dark" ? "selected" : "" ?>>
+                        Dark
+                    </option>
+
+                    <option value="ocean-blue"
+                        <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+                        Ocean Blue
+                    </option>
+
+                    <option value="sage-green"
+                        <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+                        Sage Green
+                    </option>
+                </select>
+
+            </form>
         </nav>
 
     </div>
 </header>
 
+
+<!-- MAIN CONTENT -->
 <main class="container reservations-container">
 
     <div class="reservations-heading">
-        <span class="gold-flower heading-flower">✿</span>
+
+        <?= flowerIcon("hero-flower") ?>
 
         <span class="pastel-label">Hapësira ime</span>
 
@@ -96,25 +187,36 @@ $errorCode = $_GET["error"] ?? "";
         <p>
             Këtu mund t'i shikosh rezervimet, detajet dhe statusin e tyre.
         </p>
+
     </div>
 
+
+    <!-- SUCCESS MESSAGE -->
     <?php if (isset($_GET["cancelled"]) && $_GET["cancelled"] === "1"): ?>
+
         <div class="message success">
             <?= h($messages["cancelled"]) ?>
         </div>
+
     <?php endif; ?>
 
+
+    <!-- ERROR MESSAGE -->
     <?php if (isset($messages[$errorCode])): ?>
+
         <div class="message error">
             <?= h($messages[$errorCode]) ?>
         </div>
+
     <?php endif; ?>
 
+
+    <!-- EMPTY RESERVATIONS -->
     <?php if (empty($reservations)): ?>
 
         <section class="content-card empty pastel-empty">
 
-            <div class="empty-flower">✿</div>
+            <?= flowerIcon("empty-icon") ?>
 
             <h2>Nuk ke ende rezervime</h2>
 
@@ -130,15 +232,18 @@ $errorCode = $_GET["error"] ?? "";
 
     <?php else: ?>
 
+        <!-- RESERVATIONS TABLE -->
         <section class="content-card reservations-card">
 
             <div class="reservations-card-heading">
+
                 <h2>Lista e rezervimeve</h2>
 
                 <span class="reservation-count">
                     <?= count($reservations) ?>
                     <?= count($reservations) === 1 ? "rezervim" : "rezervime" ?>
                 </span>
+
             </div>
 
             <div class="table-container pastel-table-container">
@@ -168,7 +273,10 @@ $errorCode = $_GET["error"] ?? "";
                             </td>
 
                             <td>
-                                <?= h(date("d.m.Y H:i", strtotime($reservation["event_date"]))) ?>
+                                <?= h(date(
+                                    "d.m.Y H:i",
+                                    strtotime($reservation["event_date"])
+                                )) ?>
                             </td>
 
                             <td>
@@ -176,10 +284,14 @@ $errorCode = $_GET["error"] ?? "";
                             </td>
 
                             <td class="price-cell">
-                                <?= number_format((float) $reservation["total_price"], 2) ?> €
+                                <?= number_format(
+                                    (float) $reservation["total_price"],
+                                    2
+                                ) ?> €
                             </td>
 
                             <td>
+
                                 <?php if ($reservation["status"] === "confirmed"): ?>
 
                                     <span class="status-badge confirmed">
@@ -199,10 +311,14 @@ $errorCode = $_GET["error"] ?? "";
                                     </span>
 
                                 <?php endif; ?>
+
                             </td>
 
                             <td>
-                                <?= h(date("d.m.Y H:i", strtotime($reservation["created_at"]))) ?>
+                                <?= h(date(
+                                    "d.m.Y H:i",
+                                    strtotime($reservation["created_at"])
+                                )) ?>
                             </td>
 
                             <td>
@@ -260,12 +376,28 @@ $errorCode = $_GET["error"] ?? "";
 
 </main>
 
-<footer class="pastel-footer">
+
+<!-- FOOTER -->
+<footer class="site-footer">
+
+    <div class="footer-brand">
+
+        <?= flowerIcon("footer-flower") ?>
+
+        evente<span>&</span>bileta
+
+    </div>
+
     <p>
-        <span class="gold-flower">✿</span>
-        &copy; <?= date("Y") ?> Sistemi për Menaxhimin e Eventeve dhe Biletave
-        <span class="gold-flower">✿</span>
+        Zbulo. Përjeto. Krijo kujtime të bukura.
     </p>
+
+    <div class="footer-line"></div>
+
+    <small>
+        © <?= date("Y") ?> evente&bileta. Të gjitha të drejtat e rezervuara.
+    </small>
+
 </footer>
 
 </body>

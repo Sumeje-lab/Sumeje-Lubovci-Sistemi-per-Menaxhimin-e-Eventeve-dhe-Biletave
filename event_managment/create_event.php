@@ -14,6 +14,56 @@ if (($_SESSION["user_role"] ?? "") !== "admin") {
     exit("Nuk keni leje për të krijuar evente. Kjo mundësi është vetëm për administratorin.");
 }
 
+// Temat e lejuara
+$allowedThemes = [
+    "pastel-floral",
+    "dark",
+    "ocean-blue",
+    "sage-green"
+];
+
+$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
+
+if (!in_array($currentTheme, $allowedThemes, true)) {
+    $currentTheme = "pastel-floral";
+}
+
+// Funksioni për sigurinë e HTML
+function h($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+}
+
+// Token CSRF për formularin e temës
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
+// Ikona SVG e lules
+function flowerIcon($class = "") {
+    return '
+    <svg class="' . h($class) . '" viewBox="0 0 100 100"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true">
+        <g fill="none" stroke="currentColor"
+           stroke-width="3" stroke-linecap="round"
+           stroke-linejoin="round">
+            <ellipse cx="50" cy="25" rx="10" ry="22"/>
+            <ellipse cx="50" cy="75" rx="10" ry="22"/>
+            <ellipse cx="25" cy="50" rx="22" ry="10"/>
+            <ellipse cx="75" cy="50" rx="22" ry="10"/>
+            <ellipse cx="32" cy="32" rx="10" ry="22"
+                     transform="rotate(-45 32 32)"/>
+            <ellipse cx="68" cy="32" rx="10" ry="22"
+                     transform="rotate(45 68 32)"/>
+            <ellipse cx="32" cy="68" rx="10" ry="22"
+                     transform="rotate(45 32 68)"/>
+            <ellipse cx="68" cy="68" rx="10" ry="22"
+                     transform="rotate(-45 68 68)"/>
+            <circle cx="50" cy="50" r="7" fill="currentColor"/>
+        </g>
+    </svg>';
+}
+
 $message = "";
 $messageType = "error";
 
@@ -134,17 +184,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krijo event të ri</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
-<body class="auth-page">
+<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
 
-<header class="pastel-header">
+<header class="site-header">
     <div class="header-content">
 
-        <a href="index.php" class="brand-link">
-            <span class="gold-flower">✿</span>
-            <span>Sistemi për Menaxhimin e Eventeve dhe Biletave</span>
+        <a href="index.php" class="brand">
+            <?= flowerIcon("brand-flower") ?>
+            <span>evente<span class="brand-amp">&</span>bileta</span>
         </a>
 
         <nav>
@@ -152,6 +202,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <a href="create_event.php" class="active">Krijo event</a>
             <a href="reservations.php">Rezervimet e mia</a>
             <a href="logout.php">Dil nga llogaria</a>
+
+            <form action="change_theme.php" method="POST" class="theme-form">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= h($_SESSION["csrf_token"]) ?>"
+                >
+
+                <select
+                    name="theme"
+                    onchange="this.form.submit()"
+                    aria-label="Zgjidh temën e faqes"
+                >
+                    <option value="pastel-floral" <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+                        Pastel Floral
+                    </option>
+
+                    <option value="dark" <?= $currentTheme === "dark" ? "selected" : "" ?>>
+                        Dark
+                    </option>
+
+                    <option value="ocean-blue" <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+                        Ocean Blue
+                    </option>
+
+                    <option value="sage-green" <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+                        Sage Green
+                    </option>
+                </select>
+            </form>
         </nav>
 
     </div>
@@ -161,7 +241,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <section class="form-card event-create-card">
 
-        <div class="event-flower">✿</div>
+        <div class="event-flower">
+            <?= flowerIcon("brand-flower") ?>
+        </div>
 
         <div class="section-heading">
             <span class="pastel-label">Hapësira e administratorit</span>
@@ -175,8 +257,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
 
         <?php if ($message !== ""): ?>
-            <div class="message <?= htmlspecialchars($messageType, ENT_QUOTES, "UTF-8") ?>">
-                <?= htmlspecialchars($message, ENT_QUOTES, "UTF-8") ?>
+            <div class="message <?= h($messageType) ?>">
+                <?= h($message) ?>
             </div>
         <?php endif; ?>
 
@@ -184,13 +266,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="field">
                 <label for="title">Titulli i eventit *</label>
+
                 <input
                     type="text"
                     id="title"
                     name="title"
                     maxlength="200"
                     placeholder="Shkruaj titullin e eventit"
-                    value="<?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?>"
+                    value="<?= h($title) ?>"
                     required
                 >
             </div>
@@ -214,10 +297,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     <?php foreach ($categories as $item): ?>
                         <option
-                            value="<?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>"
+                            value="<?= h($item) ?>"
                             <?= $category === $item ? "selected" : "" ?>
                         >
-                            <?= htmlspecialchars($item, ENT_QUOTES, "UTF-8") ?>
+                            <?= h($item) ?>
                         </option>
                     <?php endforeach; ?>
 
@@ -232,7 +315,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     name="description"
                     rows="4"
                     placeholder="Shkruaj disa informata rreth eventit..."
-                ><?= htmlspecialchars($description, ENT_QUOTES, "UTF-8") ?></textarea>
+                ><?= h($description) ?></textarea>
             </div>
 
             <div class="field">
@@ -244,7 +327,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     name="location"
                     maxlength="200"
                     placeholder="P.sh. Prishtinë"
-                    value="<?= htmlspecialchars($location, ENT_QUOTES, "UTF-8") ?>"
+                    value="<?= h($location) ?>"
                     required
                 >
             </div>
@@ -256,7 +339,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="datetime-local"
                     id="event_date"
                     name="event_date"
-                    value="<?= htmlspecialchars($eventDate, ENT_QUOTES, "UTF-8") ?>"
+                    value="<?= h($eventDate) ?>"
                     required
                 >
             </div>
@@ -271,7 +354,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     min="0"
                     step="0.01"
                     placeholder="0.00"
-                    value="<?= htmlspecialchars($price, ENT_QUOTES, "UTF-8") ?>"
+                    value="<?= h($price) ?>"
                     required
                 >
             </div>
@@ -286,7 +369,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     min="1"
                     step="1"
                     placeholder="P.sh. 100"
-                    value="<?= htmlspecialchars($totalTickets, ENT_QUOTES, "UTF-8") ?>"
+                    value="<?= h($totalTickets) ?>"
                     required
                 >
             </div>
@@ -313,11 +396,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 </main>
 
-<footer class="pastel-footer">
+<footer class="site-footer">
     <p>
-        <span class="gold-flower">✿</span>
+        <?= flowerIcon("brand-flower") ?>
         Sistemi për Menaxhimin e Eventeve dhe Biletave
-        <span class="gold-flower">✿</span>
+        <?= flowerIcon("brand-flower") ?>
     </p>
 </footer>
 

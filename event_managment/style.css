@@ -51,13 +51,19 @@ body {
 
 /* HEADER */
 
+
 .site-header {
     background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 12px 6%;
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
 }
+
 
 .header-content {
     max-width: 1250px;
@@ -76,22 +82,25 @@ body {
     gap: 10px;
 
     text-decoration: none;
-    color: var(--gold);
+    color: #B08D3C;
 
     font-family: Georgia, serif;
     font-size: 27px;
     font-weight: bold;
     letter-spacing: -1px;
+
+    text-shadow: 0 1px 1px rgba(176, 141, 60, 0.12);
 }
 
 .brand-flower {
+    display: block;
     width: 52px;
     height: 52px;
-    color: var(--gold);
+    flex-shrink: 0;
+    color: #C5A04B;
 }
-
 .brand-amp {
-    color: #A88CC2;
+    color: #D4AF62;
     margin: 0 2px;
 }
 
@@ -1750,4 +1759,57 @@ body[data-theme="sage-green"] .event-create-card {
         justify-content: center;
         width: 100%;
     }
+}
+
+/* Lulet dekorative SVG nga logoja */
+
+.brand-flower {
+    display: block;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+}
+
+.hero-flower {
+    display: block;
+    width: 85px;
+    height: 85px;
+    margin: 28px auto 0;
+    color: #C29A45;
+    opacity: 0.8;
+}
+
+.event-count-flower {
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    color: #C29A45;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.empty-icon {
+    display: block;
+    width: 65px;
+    height: 65px;
+    color: #C29A45;
+    margin: 0 auto 15px;
+}
+
+.event-flower {
+    display: block;
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    flex-shrink: 0;
+    color: #C29A45;
+}
+
+.footer-flower {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    color: #C29A45;
+    vertical-align: middle;
+    margin-right: 7px;
 }

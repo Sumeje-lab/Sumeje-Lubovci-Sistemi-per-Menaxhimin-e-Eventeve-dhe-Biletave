@@ -33,6 +33,7 @@ try {
 
 $isLoggedIn = isset($_SESSION["user_id"]);
 $isAdmin = $isLoggedIn && (($_SESSION["user_role"] ?? "") === "admin");
+
 $allowedThemes = [
     "pastel-floral",
     "dark",
@@ -45,11 +46,39 @@ $currentTheme = $_SESSION["theme"] ?? "pastel-floral";
 if (!in_array($currentTheme, $allowedThemes, true)) {
     $currentTheme = "pastel-floral";
 }
+
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
+
 function h($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+}
+
+// Funksioni për shfaqjen e lules së logos.
+function flowerIcon($class = "") {
+    return '
+    <svg class="' . h($class) . '" viewBox="0 0 100 100"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true">
+        <g fill="none" stroke="currentColor"
+           stroke-width="3" stroke-linecap="round"
+           stroke-linejoin="round">
+            <ellipse cx="50" cy="25" rx="10" ry="22"/>
+            <ellipse cx="50" cy="75" rx="10" ry="22"/>
+            <ellipse cx="25" cy="50" rx="22" ry="10"/>
+            <ellipse cx="75" cy="50" rx="22" ry="10"/>
+            <ellipse cx="32" cy="32" rx="10" ry="22"
+                     transform="rotate(-45 32 32)"/>
+            <ellipse cx="68" cy="32" rx="10" ry="22"
+                     transform="rotate(45 68 32)"/>
+            <ellipse cx="32" cy="68" rx="10" ry="22"
+                     transform="rotate(45 32 68)"/>
+            <ellipse cx="68" cy="68" rx="10" ry="22"
+                     transform="rotate(-45 68 68)"/>
+            <circle cx="50" cy="50" r="7" fill="currentColor"/>
+        </g>
+    </svg>';
 }
 ?>
 
@@ -61,7 +90,7 @@ function h($value) {
 
     <title>evente&bileta | Zbulo eventin tënd</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body data-theme="<?= h($currentTheme) ?>">
@@ -71,27 +100,8 @@ function h($value) {
     <div class="header-content">
 
         <a href="index.php" class="brand">
-            <svg class="brand-flower" viewBox="0 0 100 100"
-                 xmlns="http://www.w3.org/2000/svg"
-                 aria-label="Logo me lule ngjyrë ari">
-                <g fill="none" stroke="currentColor"
-                   stroke-width="3" stroke-linecap="round"
-                   stroke-linejoin="round">
-                    <ellipse cx="50" cy="25" rx="10" ry="22"/>
-                    <ellipse cx="50" cy="75" rx="10" ry="22"/>
-                    <ellipse cx="25" cy="50" rx="22" ry="10"/>
-                    <ellipse cx="75" cy="50" rx="22" ry="10"/>
-                    <ellipse cx="32" cy="32" rx="10" ry="22"
-                             transform="rotate(-45 32 32)"/>
-                    <ellipse cx="68" cy="32" rx="10" ry="22"
-                             transform="rotate(45 68 32)"/>
-                    <ellipse cx="32" cy="68" rx="10" ry="22"
-                             transform="rotate(45 32 68)"/>
-                    <ellipse cx="68" cy="68" rx="10" ry="22"
-                             transform="rotate(-45 68 68)"/>
-                    <circle cx="50" cy="50" r="7" fill="currentColor"/>
-                </g>
-            </svg>
+
+            <?= flowerIcon("brand-flower") ?>
 
             <span>evente<span class="brand-amp">&</span>bileta</span>
         </a>
@@ -100,6 +110,7 @@ function h($value) {
             <a href="index.php" class="active">Kryefaqja</a>
 
             <?php if ($isLoggedIn): ?>
+
                 <a href="reservations.php">Rezervimet e mia</a>
 
                 <?php if ($isAdmin): ?>
@@ -109,47 +120,51 @@ function h($value) {
                 <?php endif; ?>
 
                 <a href="logout.php">Dil nga llogaria</a>
+
                 <form action="change_theme.php" method="POST" class="theme-form">
 
-    <input
-        type="hidden"
-        name="csrf_token"
-        value="<?= h($_SESSION["csrf_token"]) ?>"
-    >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="<?= h($_SESSION["csrf_token"]) ?>"
+                    >
 
-    <select
-        name="theme"
-        onchange="this.form.submit()"
-        aria-label="Zgjidh temën e faqes"
-    >
-        <option value="pastel-floral"
-            <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
-            Pastel Floral
-        </option>
+                    <select
+                        name="theme"
+                        onchange="this.form.submit()"
+                        aria-label="Zgjidh temën e faqes"
+                    >
+                        <option value="pastel-floral"
+                            <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+                            Pastel Floral
+                        </option>
 
-        <option value="dark"
-            <?= $currentTheme === "dark" ? "selected" : "" ?>>
-            Dark
-        </option>
+                        <option value="dark"
+                            <?= $currentTheme === "dark" ? "selected" : "" ?>>
+                            Dark
+                        </option>
 
-        <option value="ocean-blue"
-            <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
-            Ocean Blue
-        </option>
+                        <option value="ocean-blue"
+                            <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+                            Ocean Blue
+                        </option>
 
-        <option value="sage-green"
-            <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
-            Sage Green
-        </option>
-    </select>
+                        <option value="sage-green"
+                            <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+                            Sage Green
+                        </option>
+                    </select>
 
-</form>
+                </form>
 
             <?php else: ?>
+
                 <a href="login.php">Kyçu</a>
+
                 <a href="register.php" class="nav-highlight">
                     Regjistrohu
                 </a>
+
             <?php endif; ?>
         </nav>
 
@@ -194,6 +209,7 @@ function h($value) {
         <?php else: ?>
 
             <div class="hero-actions">
+
                 <a href="#events" class="button button-primary">
                     Eksploro eventet
                 </a>
@@ -201,11 +217,12 @@ function h($value) {
                 <a href="register.php" class="button button-light">
                     Krijo llogari
                 </a>
+
             </div>
 
         <?php endif; ?>
 
-        <div class="hero-flower">✿</div>
+        <?= flowerIcon("hero-flower") ?>
 
     </div>
 </section>
@@ -218,14 +235,18 @@ function h($value) {
 
         <div>
             <span class="section-eyebrow">PËRVOJAT E RADHËS</span>
+
             <h2>Eventet e ardhshme</h2>
+
             <p class="muted">
                 Zbulo aktivitetet dhe eventet që janë regjistruar në sistem.
             </p>
         </div>
 
         <div class="event-count">
-            <span>✿</span>
+
+            <?= flowerIcon("event-count-flower") ?>
+
             Evente për t'u zbuluar
         </div>
 
@@ -233,9 +254,11 @@ function h($value) {
 
 
     <?php if ($successMessage !== ""): ?>
+
         <div class="message success">
             <?= h($successMessage) ?>
         </div>
+
     <?php endif; ?>
 
 
@@ -248,11 +271,15 @@ function h($value) {
     <?php elseif (empty($events)): ?>
 
         <div class="empty">
-            <div class="empty-icon">✿</div>
+
+            <?= flowerIcon("empty-icon") ?>
+
             <h3>Ende nuk ka evente</h3>
+
             <p>
                 Eventet e reja do të shfaqen këtu sapo të regjistrohen.
             </p>
+
         </div>
 
     <?php else: ?>
@@ -264,11 +291,13 @@ function h($value) {
                 <article class="event">
 
                     <div class="event-top">
+
                         <span class="category">
                             <?= h($event["category"] ?? "Tjetër") ?>
                         </span>
 
-                        <span class="event-flower">✿</span>
+                        <?= flowerIcon("event-flower") ?>
+
                     </div>
 
                     <h3><?= h($event["title"]) ?></h3>
@@ -286,6 +315,7 @@ function h($value) {
 
                         <p>
                             <span class="detail-icon">◷</span>
+
                             <?= h(date(
                                 "d.m.Y H:i",
                                 strtotime($event["event_date"])
@@ -298,6 +328,7 @@ function h($value) {
 
                         <div>
                             <span class="price-label">Çmimi i biletës</span>
+
                             <p class="price">
                                 <?= number_format((float)$event["price"], 2) ?> €
                             </p>
@@ -305,6 +336,7 @@ function h($value) {
 
                         <div class="tickets">
                             <span class="ticket-dot"></span>
+
                             <?= (int)$event["available_tickets"] ?>
                             bileta të lira
                         </div>
@@ -319,7 +351,8 @@ function h($value) {
 
                                 <a
                                     href="reserve.php?event_id=<?= (int)$event["id"] ?>"
-                                    class="button reserve-link">
+                                    class="button reserve-link"
+                                >
                                     Rezervo biletën
                                     <span>→</span>
                                 </a>
@@ -358,8 +391,11 @@ function h($value) {
 <footer class="site-footer">
 
     <div class="footer-brand">
-        <span class="footer-flower">✿</span>
+
+        <?= flowerIcon("footer-flower") ?>
+
         evente<span>&</span>bileta
+
     </div>
 
     <p>
