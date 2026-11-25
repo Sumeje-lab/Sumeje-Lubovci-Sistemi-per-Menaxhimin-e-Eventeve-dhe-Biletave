@@ -3,102 +3,12 @@
 session_start();
 require_once "db.php";
 
-// Temat e lejuara
-$allowedThemes = [
-    "pastel-floral",
-    "dark",
-    "ocean-blue",
-    "sage-green"
-];
-
-$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
-
-if (!in_array($currentTheme, $allowedThemes, true)) {
-    $currentTheme = "pastel-floral";
-}
-
-$message = "";
-$messageType = "error";
-$name = "";
-$email = "";
-
-// Procesi i regjistrimit
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $name = trim($_POST["name"] ?? "");
-    $email = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
-    $confirmPassword = $_POST["confirm_password"] ?? "";
-
-    if ($name === "" || $email === "" || $password === "") {
-
-        $message = "Ju lutem plotësoni të gjitha fushat.";
-
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-        $message = "Ju lutem shkruani një email të vlefshëm.";
-
-    } elseif (strlen($password) < 8) {
-
-        $message = "Fjalëkalimi duhet të ketë të paktën 8 karaktere.";
-
-    } elseif ($password !== $confirmPassword) {
-
-        $message = "Fjalëkalimet nuk përputhen.";
-
-    } else {
-
-        try {
-
-            // Kontrollojmë nëse email-i ekziston.
-            $stmt = $pdo->prepare(
-                "SELECT id FROM users WHERE email = ?"
-            );
-
-            $stmt->execute([$email]);
-
-            if ($stmt->fetch()) {
-
-                $message = "Ky email është regjistruar tashmë.";
-
-            } else {
-
-                // Hashimi i fjalëkalimit.
-                $passwordHash = password_hash(
-                    $password,
-                    PASSWORD_DEFAULT
-                );
-
-                // Regjistrojmë përdoruesin.
-                $stmt = $pdo->prepare(
-                    "INSERT INTO users (name, email, password_hash, role)
-                     VALUES (?, ?, ?, 'user')"
-                );
-
-                $stmt->execute([
-                    $name,
-                    $email,
-                    $passwordHash
-                ]);
-
-                header("Location: login.php?registered=1");
-                exit;
-            }
-
-        } catch (PDOException $e) {
-
-            $message = "Regjistrimi dështoi për shkak të një gabimi në databazë.";
-
-        }
-    }
-}
-
-// Funksioni për sigurinë e tekstit.
+// Funksioni për mbrojtjen e tekstit HTML
 function h($value) {
-    return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
 
-// Funksioni për logon me lulen SVG.
+// Ikona dekorative e lules
 function flowerIcon($class = "") {
     return '
     <svg class="' . h($class) . '" viewBox="0 0 100 100"
@@ -123,6 +33,100 @@ function flowerIcon($class = "") {
         </g>
     </svg>';
 }
+
+// Nëse përdoruesi është kyçur, kthehet në kryefaqe
+if (isset($_SESSION["user_id"])) {
+    header("Location: index.php");
+    exit;
+}
+
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $name = trim($_POST["name"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+    $confirmPassword = $_POST["confirm_password"] ?? "";
+
+    // Kontrollojmë nëse fushat janë plotësuar
+    if (
+        $name === "" ||
+        $email === "" ||
+        $password === "" ||
+        $confirmPassword === ""
+    ) {
+
+        $error = "Ju lutem plotësoni të gjitha fushat.";
+
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+        $error = "Ju lutem shkruani një email adresë valide.";
+
+    } elseif (strlen($password) < 6) {
+
+        $error = "Fjalëkalimi duhet të ketë së paku 6 karaktere.";
+
+    } elseif ($password !== $confirmPassword) {
+
+        $error = "Fjalëkalimet nuk përputhen.";
+
+    } else {
+
+        try {
+
+            // Kontrollojmë nëse email ekziston
+            $checkSql = "SELECT id
+                         FROM users
+                         WHERE email = :email
+                         LIMIT 1";
+
+            $checkStmt = $pdo->prepare($checkSql);
+
+            $checkStmt->execute([
+                "email" => $email
+            ]);
+
+            if ($checkStmt->fetch()) {
+
+                $error = "Ky email është i regjistruar tashmë.";
+
+            } else {
+
+                // Hash-ojmë fjalëkalimin
+                $hashedPassword = password_hash(
+                    $password,
+                    PASSWORD_DEFAULT
+                );
+
+                // Regjistrojmë përdoruesin
+                // Përdorim kolonën password_hash
+                $sql = "INSERT INTO users
+                        (name, email, password_hash, role)
+                        VALUES
+                        (:name, :email, :password_hash, 'user')";
+
+                $stmt = $pdo->prepare($sql);
+
+                $stmt->execute([
+                    "name" => $name,
+                    "email" => $email,
+                    "password_hash" => $hashedPassword
+                ]);
+
+                // Ridrejtojmë përdoruesin te kyçja
+                header("Location: login.php?registered=1");
+                exit;
+            }
+
+        } catch (PDOException $e) {
+
+            error_log("Gabim gjatë regjistrimit: " . $e->getMessage());
+
+            $error = "Ndodhi një gabim gjatë regjistrimit. Ju lutem provoni përsëri.";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -132,221 +136,144 @@ function flowerIcon($class = "") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Regjistrohu | evente&bileta</title>
+    <title>Regjistrohu | Evente & Bileta</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 
-<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
+<body class="auth-page register-page">
 
-<!-- HEADER -->
-<header class="site-header">
+<div class="auth-container register-container">
 
-    <div class="header-content">
+    <!-- Pjesa dekorative -->
+    <section class="auth-intro register-intro">
 
-        <a href="index.php" class="brand">
+        <?= flowerIcon("auth-flower") ?>
 
-            <?= flowerIcon("brand-flower") ?>
+        <p class="auth-eyebrow">BËHU PJESË E KOMUNITETIT</p>
 
-            <span>evente<span class="brand-amp">&</span>bileta</span>
+        <h1>Çdo event fillon me një mundësi të re.</h1>
 
-        </a>
+        <p>
+            Krijo llogarinë tënde dhe fillo të zbulosh
+            përvoja të reja, evente interesante dhe momente të veçanta.
+        </p>
 
-        <nav>
+        <div class="auth-decoration">
+            <span>✧</span>
+            <span>✿</span>
+            <span>✧</span>
+        </div>
 
-            <a href="index.php">Kryefaqja</a>
+    </section>
 
-            <a href="login.php" class="nav-highlight">
-                Kyçu
-            </a>
-
-        </nav>
-
-    </div>
-
-</header>
-
-
-<!-- REGISTER SECTION -->
-<main class="auth-container register-container">
-
-    <div class="auth-decoration decoration-one">
-        <?= flowerIcon("event-flower") ?>
-    </div>
-
-    <div class="auth-decoration decoration-two">
-        <?= flowerIcon("event-flower") ?>
-    </div>
-
-
+    <!-- Forma e regjistrimit -->
     <section class="auth-card register-card">
 
-        <div class="auth-flower">
-            <?= flowerIcon("empty-icon") ?>
-        </div>
+        <div class="auth-card-heading">
 
+            <p class="auth-eyebrow">KRIJO LLOGARINË</p>
 
-        <div class="auth-heading">
+            <h2>Regjistrohu</h2>
 
-            <span class="eyebrow">
-                BASHKOHU ME NE
-            </span>
-
-            <h1>Krijo llogarinë tënde</h1>
-
-            <p>
-                Regjistrohu dhe bëhu pjesë e përvojave të veçanta.
-            </p>
+            <p>Plotëso të dhënat për të krijuar llogarinë.</p>
 
         </div>
 
+        <!-- Mesazhi i gabimit -->
+        <?php if ($error !== ""): ?>
 
-        <!-- ERROR MESSAGE -->
-        <?php if ($message !== ""): ?>
-
-            <div class="message <?= h($messageType) ?>">
-                <?= h($message) ?>
+            <div class="message error-message">
+                <?= h($error) ?>
             </div>
 
         <?php endif; ?>
 
+        <form method="POST" action="register.php">
 
-        <!-- REGISTER FORM -->
-        <form method="POST" class="auth-form">
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="name">
-                    Emri dhe mbiemri
-                </label>
+                <label for="name">Emri dhe mbiemri</label>
 
                 <input
                     type="text"
                     id="name"
                     name="name"
                     placeholder="Shkruaj emrin tënd"
-                    value="<?= h($name) ?>"
-                    required
+                    value="<?= h($_POST["name"] ?? "") ?>"
                     autocomplete="name"
+                    required
                 >
 
             </div>
 
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="email">
-                    Email-i
-                </label>
+                <label for="email">Email adresa</label>
 
                 <input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Shkruaj email-in tënd"
-                    value="<?= h($email) ?>"
-                    required
+                    placeholder="shembull@email.com"
+                    value="<?= h($_POST["email"] ?? "") ?>"
                     autocomplete="email"
+                    required
                 >
 
             </div>
 
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="password">
-                    Fjalëkalimi
-                </label>
+                <label for="password">Fjalëkalimi</label>
 
                 <input
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Të paktën 8 karaktere"
-                    minlength="8"
-                    required
+                    placeholder="Minimum 6 karaktere"
                     autocomplete="new-password"
+                    required
                 >
 
             </div>
 
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="confirm_password">
-                    Përsërit fjalëkalimin
-                </label>
+                <label for="confirm_password">Konfirmo fjalëkalimin</label>
 
                 <input
                     type="password"
                     id="confirm_password"
                     name="confirm_password"
                     placeholder="Shkruaj përsëri fjalëkalimin"
-                    minlength="8"
-                    required
                     autocomplete="new-password"
+                    required
                 >
 
             </div>
 
-
-            <button type="submit" class="auth-button">
-
-                Krijo llogari
-                <span>→</span>
-
+            <button type="submit" class="auth-button register-button">
+                Krijo llogarinë
             </button>
 
         </form>
 
+        <div class="auth-switch">
 
-        <div class="auth-divider">
-            <span>OSE</span>
+            Ke tashmë llogari?
+
+            <a href="login.php">Kyçu këtu</a>
+
         </div>
 
-
-        <p class="auth-bottom">
-
-            Ke tashmë një llogari?
-
-            <a href="login.php">
-                Kyçu këtu
-            </a>
-
-        </p>
+        <a href="index.php" class="auth-back">
+            ← Kthehu në kryefaqe
+        </a>
 
     </section>
 
-
-    <p class="auth-note">
-        ✿ Momentet më të bukura i përjetojmë së bashku. ✿
-    </p>
-
-</main>
-
-
-<!-- FOOTER -->
-<footer class="site-footer">
-
-    <div class="footer-brand">
-
-        <?= flowerIcon("footer-flower") ?>
-
-        evente<span>&</span>bileta
-
-    </div>
-
-    <p>
-        Zbulo. Përjeto. Krijo kujtime të bukura.
-    </p>
-
-    <div class="footer-line"></div>
-
-    <small>
-        © <?= date("Y") ?> evente&bileta. Të gjitha të drejtat e rezervuara.
-    </small>
-
-</footer>
+</div>
 
 </body>
 </html>

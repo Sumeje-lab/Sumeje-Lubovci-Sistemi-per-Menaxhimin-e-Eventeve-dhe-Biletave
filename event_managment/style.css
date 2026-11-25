@@ -1,6 +1,12 @@
 
 /* =====================================
    EVENTE & BILETA - PASTEL FLORAL DESIGN
+   VERSION I PASTRUAR
+===================================== */
+
+
+/* =====================================
+   1. GLOBAL STYLES
 ===================================== */
 
 * {
@@ -12,7 +18,6 @@
 :root {
     --primary: #9271B5;
     --primary-dark: #79599D;
-
     --gold: #C5A64A;
     --gold-light: #E9D99F;
 
@@ -28,7 +33,6 @@
 
     --text: #393047;
     --muted: #82798C;
-
     --border: #EDE5F0;
 
     --success: #668C72;
@@ -49,8 +53,9 @@ body {
 }
 
 
-/* HEADER */
-
+/* =====================================
+   2. HEADER AND NAVIGATION
+===================================== */
 
 .site-header {
     background: rgba(255, 255, 255, 0.95);
@@ -64,11 +69,9 @@ body {
     width: 100%;
 }
 
-
 .header-content {
     max-width: 1250px;
     margin: auto;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -80,15 +83,12 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-
     text-decoration: none;
     color: #B08D3C;
-
     font-family: Georgia, serif;
     font-size: 27px;
     font-weight: bold;
     letter-spacing: -1px;
-
     text-shadow: 0 1px 1px rgba(176, 141, 60, 0.12);
 }
 
@@ -97,8 +97,8 @@ body {
     width: 52px;
     height: 52px;
     flex-shrink: 0;
-    color: #C5A04B;
 }
+
 .brand-amp {
     color: #D4AF62;
     margin: 0 2px;
@@ -114,13 +114,10 @@ nav {
 nav a {
     text-decoration: none;
     color: var(--text);
-
     padding: 9px 15px;
     border-radius: 30px;
-
     font-size: 14px;
     font-weight: 600;
-
     transition: 0.25s ease;
 }
 
@@ -140,17 +137,17 @@ nav a.nav-highlight:hover {
 }
 
 
-/* HERO SECTION */
+/* =====================================
+   3. HERO SECTION
+===================================== */
 
 .hero {
     position: relative;
     overflow: hidden;
-
     background:
         radial-gradient(circle at 10% 15%, #F7DDE9 0, transparent 32%),
         radial-gradient(circle at 90% 80%, #DDEFE9 0, transparent 30%),
         linear-gradient(120deg, #F5EAF7, #EDE7F8 48%, #F9E9EF);
-
     padding: 85px 20px 95px;
     text-align: center;
 }
@@ -164,16 +161,12 @@ nav a.nav-highlight:hover {
 
 .hero-label {
     display: inline-block;
-
     color: var(--primary-dark);
     background: rgba(255, 255, 255, 0.7);
-
     border: 1px solid #E5D9EF;
     border-radius: 30px;
-
     padding: 8px 18px;
     margin-bottom: 22px;
-
     font-size: 11px;
     font-weight: bold;
     letter-spacing: 2px;
@@ -183,7 +176,6 @@ nav a.nav-highlight:hover {
     font-family: Georgia, serif;
     font-size: clamp(36px, 6vw, 65px);
     line-height: 1.2;
-
     color: #514263;
     margin-bottom: 20px;
 }
@@ -196,7 +188,6 @@ nav a.nav-highlight:hover {
 .hero p {
     max-width: 650px;
     margin: 0 auto 25px;
-
     color: #756B80;
     font-size: 17px;
 }
@@ -231,9 +222,11 @@ nav a.nav-highlight:hover {
 }
 
 .hero-flower {
-    color: var(--gold);
-    font-size: 48px;
-    margin-top: 28px;
+    display: block;
+    width: 85px;
+    height: 85px;
+    margin: 28px auto 0;
+    color: #C29A45;
     opacity: 0.8;
 }
 
@@ -244,23 +237,21 @@ nav a.nav-highlight:hover {
 }
 
 
-/* BUTTONS */
+/* =====================================
+   4. BUTTONS
+===================================== */
 
 .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     padding: 12px 23px;
-
     border: none;
     border-radius: 30px;
-
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
-
     cursor: pointer;
     transition: 0.25s ease;
 }
@@ -268,7 +259,6 @@ nav a.nav-highlight:hover {
 .button-primary {
     background: var(--primary);
     color: white;
-
     box-shadow: 0 5px 15px #9271B533;
 }
 
@@ -288,7 +278,9 @@ nav a.nav-highlight:hover {
 }
 
 
-/* MAIN CONTAINER */
+/* =====================================
+   5. MAIN CONTAINER AND HEADINGS
+===================================== */
 
 .container {
     max-width: 1250px;
@@ -302,7 +294,6 @@ nav a.nav-highlight:hover {
     justify-content: space-between;
     gap: 20px;
     flex-wrap: wrap;
-
     margin-bottom: 32px;
 }
 
@@ -328,10 +319,8 @@ nav a.nav-highlight:hover {
 .event-count {
     background: var(--lavender);
     color: var(--primary-dark);
-
     padding: 10px 17px;
     border-radius: 30px;
-
     font-size: 13px;
     font-weight: 600;
 }
@@ -341,8 +330,19 @@ nav a.nav-highlight:hover {
     margin-right: 5px;
 }
 
+.event-count-flower {
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    color: #C29A45;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 
-/* EVENT CARDS */
+
+/* =====================================
+   6. EVENT CARDS
+===================================== */
 
 .events {
     display: grid;
@@ -354,14 +354,10 @@ nav a.nav-highlight:hover {
     background: white;
     border: 1px solid var(--border);
     border-radius: 20px;
-
     padding: 25px;
-
     display: flex;
     flex-direction: column;
-
     box-shadow: 0 7px 25px #5142630A;
-
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -379,20 +375,21 @@ nav a.nav-highlight:hover {
 
 .category {
     display: inline-block;
-
     background: var(--pink);
     color: #A66C88;
-
     border-radius: 30px;
     padding: 6px 13px;
-
     font-size: 12px;
     font-weight: bold;
 }
 
 .event-flower {
-    color: var(--gold);
-    font-size: 25px;
+    display: block;
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    flex-shrink: 0;
+    color: #C29A45;
 }
 
 .event h3 {
@@ -401,7 +398,6 @@ nav a.nav-highlight:hover {
     color: #574765;
     line-height: 1.3;
     margin-bottom: 12px;
-
     overflow-wrap: anywhere;
 }
 
@@ -436,7 +432,6 @@ nav a.nav-highlight:hover {
     justify-content: space-between;
     align-items: end;
     gap: 10px;
-
     padding-bottom: 18px;
     margin-top: auto;
 }
@@ -461,7 +456,6 @@ nav a.nav-highlight:hover {
     display: inline-block;
     width: 8px;
     height: 8px;
-
     background: #8EB99A;
     border-radius: 50%;
     margin-right: 4px;
@@ -484,7 +478,9 @@ nav a.nav-highlight:hover {
 }
 
 
-/* MESSAGES */
+/* =====================================
+   7. MESSAGES AND EMPTY STATES
+===================================== */
 
 .message {
     padding: 15px 18px;
@@ -508,16 +504,17 @@ nav a.nav-highlight:hover {
 .empty {
     text-align: center;
     padding: 65px 20px;
-
     background: white;
     border: 1px dashed #DCCFE7;
     border-radius: 20px;
 }
 
 .empty-icon {
-    font-size: 45px;
-    color: var(--gold);
-    margin-bottom: 10px;
+    display: block;
+    width: 65px;
+    height: 65px;
+    color: #C29A45;
+    margin: 0 auto 15px;
 }
 
 .empty h3 {
@@ -531,23 +528,20 @@ nav a.nav-highlight:hover {
     margin-top: 8px;
 }
 
-
-/* SOLD OUT */
-
 .sold-out {
     background: #FBE8EB;
     color: #AC6476;
-
     text-align: center;
     padding: 11px;
     border-radius: 30px;
-
     font-size: 13px;
     font-weight: bold;
 }
 
 
-/* FOOTER */
+/* =====================================
+   8. FOOTER
+===================================== */
 
 .site-footer {
     background: #F0EAF5;
@@ -568,7 +562,11 @@ nav a.nav-highlight:hover {
 }
 
 .footer-flower {
-    font-size: 27px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    color: #C29A45;
+    vertical-align: middle;
     margin-right: 7px;
 }
 
@@ -589,336 +587,9 @@ nav a.nav-highlight:hover {
 }
 
 
-/* RESPONSIVE DESIGN */
-
-@media (max-width: 700px) {
-
-    .site-header {
-        padding: 14px 18px;
-    }
-
-    .header-content {
-        justify-content: center;
-    }
-
-    .brand {
-        font-size: 23px;
-    }
-
-    .brand-flower {
-        width: 43px;
-        height: 43px;
-    }
-
-    nav {
-        justify-content: center;
-        gap: 5px;
-    }
-
-    nav a {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-
-    .hero {
-        padding: 65px 20px;
-    }
-
-    .hero p {
-        font-size: 15px;
-    }
-
-    .container {
-        margin: 40px auto;
-        padding: 0 16px;
-    }
-
-    .section-heading {
-        align-items: start;
-    }
-
-    .section-heading h2 {
-        font-size: 29px;
-    }
-
-    .events {
-        grid-template-columns: 1fr;
-    }
-
-    .event {
-        padding: 21px;
-    }
-
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .hero-actions .button {
-        width: 100%;
-        max-width: 280px;
-    }
-}
-
-/* =========================
-   PASTEL FLORAL - LOGIN & REGISTER
-   ========================= */
-
-.auth-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background:
-        radial-gradient(circle at 10% 20%, #fce7f3 0, transparent 28%),
-        radial-gradient(circle at 90% 75%, #e8e4ff 0, transparent 30%),
-        #fffaf5;
-}
-
-.pastel-header {
-    background: linear-gradient(120deg, #f8dce8, #e9e2fa, #dff2e8);
-    color: #51445f;
-    padding: 18px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.brand-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #51445f;
-    font-size: 21px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.gold-flower {
-    color: #c69b32;
-    font-size: 35px;
-}
-
-.brand-amp {
-    color: #bd83a6;
-}
-
-.pastel-header nav a {
-    color: #51445f;
-}
-
-.pastel-header nav a:hover,
-.pastel-header nav .nav-highlight {
-    background: #ffffffa8;
-}
-
-.auth-container {
-    position: relative;
-    width: 100%;
-    max-width: 650px;
-    margin: auto;
-    padding: 45px 20px 25px;
-}
-
-.auth-card {
-    position: relative;
-    background: #ffffffed;
-    border: 1px solid #f0dce9;
-    border-radius: 25px;
-    padding: 35px;
-    box-shadow: 0 15px 45px #92769b20;
-}
-
-.auth-flower {
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 15px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: #fff2d5;
-    color: #c69b32;
-    font-size: 42px;
-}
-
-.auth-heading {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.auth-heading h1 {
-    color: #66516f;
-    font-size: 27px;
-    margin: 8px 0;
-}
-
-.auth-heading p {
-    color: #918397;
-    margin: 0;
-}
-
-.eyebrow {
-    color: #bd83a6;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 3px;
-}
-
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 17px;
-}
-
-.auth-form .field label {
-    color: #68596e;
-}
-
-.auth-form input {
-    background: #fffcff;
-    border: 1px solid #eaddeb;
-    border-radius: 12px;
-    padding: 14px;
-}
-
-.auth-form input:focus {
-    border-color: #c69bc8;
-    box-shadow: 0 0 0 3px #e9d8f580;
-}
-
-.auth-button {
-    width: 100%;
-    padding: 14px 20px;
-    margin-top: 8px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(110deg, #dba9c6, #b8a8df);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.auth-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px #b99acb55;
-}
-
-.auth-button span {
-    margin-left: 8px;
-}
-
-.auth-divider {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin: 25px 0;
-    color: #b5a5b8;
-    font-size: 11px;
-}
-
-.auth-divider::before,
-.auth-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: #eee1ed;
-}
-
-.auth-bottom {
-    text-align: center;
-    color: #8e8192;
-    margin-bottom: 0;
-}
-
-.auth-bottom a {
-    color: #ae79a5;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.auth-bottom a:hover {
-    text-decoration: underline;
-}
-
-.auth-note {
-    text-align: center;
-    color: #b18b9f;
-    font-size: 13px;
-    margin-top: 22px;
-}
-
-.auth-decoration {
-    position: absolute;
-    color: #d6b76b;
-    opacity: 0.55;
-    font-size: 55px;
-}
-
-.decoration-one {
-    top: 15px;
-    left: -15px;
-    transform: rotate(-20deg);
-}
-
-.decoration-two {
-    bottom: 100px;
-    right: -10px;
-    font-size: 42px;
-    transform: rotate(20deg);
-}
-
-.pastel-footer {
-    background: #f8edf4;
-    border-top: 1px solid #f0dce9;
-    padding: 17px;
-    text-align: center;
-    color: #917c91;
-    font-size: 13px;
-}
-
-.pastel-footer p {
-    margin: 0;
-}
-
-.register-card {
-    padding: 30px 35px;
-}
-
-.register-container {
-    max-width: 680px;
-}
-
-@media (max-width: 600px) {
-    .pastel-header {
-        padding: 15px 20px;
-        justify-content: center;
-    }
-
-    .brand-link {
-        font-size: 18px;
-    }
-
-    .auth-container {
-        padding: 30px 15px;
-    }
-
-    .auth-card {
-        padding: 25px 20px;
-    }
-
-    .auth-heading h1 {
-        font-size: 23px;
-    }
-
-    .auth-decoration {
-        display: none;
-    }
-}
-
-/* ===== PASTEL FLORAL - CREATE EVENT ===== */
+/* =====================================
+   9. CREATE EVENT
+===================================== */
 
 .event-create-container {
     max-width: 900px;
@@ -935,7 +606,11 @@ nav a.nav-highlight:hover {
     box-shadow: 0 12px 35px rgba(120, 91, 120, 0.10);
 }
 
-.event-flower {
+.event-create-card .event-flower {
+    display: block;
+    width: auto;
+    height: auto;
+    min-width: 0;
     text-align: center;
     font-size: 42px;
     color: #d9ad53;
@@ -991,7 +666,6 @@ nav a.nav-highlight:hover {
 .pastel-event-form select,
 .pastel-event-form textarea {
     width: 100%;
-    box-sizing: border-box;
     padding: 13px 15px;
     border: 1px solid #eadce9;
     border-radius: 12px;
@@ -1039,42 +713,10 @@ nav a.nav-highlight:hover {
     margin-top: 25px;
 }
 
-.pastel-header .active {
-    background: rgba(255, 255, 255, 0.35);
-    border-radius: 20px;
-}
 
-@media (max-width: 650px) {
-    .event-create-container {
-        margin: 25px auto;
-        padding: 12px;
-    }
-
-    .event-create-card {
-        padding: 25px 18px;
-    }
-
-    .pastel-event-form {
-        grid-template-columns: 1fr;
-    }
-
-    .pastel-event-form .full-width {
-        grid-column: auto;
-    }
-
-    .event-actions {
-        grid-column: auto;
-        flex-direction: column;
-    }
-
-    .event-actions .button {
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
-    }
-}
-
-/* ===== PASTEL FLORAL - RESERVATIONS ===== */
+/* =====================================
+   10. RESERVATIONS TABLE
+===================================== */
 
 .reservations-container {
     max-width: 1250px;
@@ -1257,31 +899,10 @@ nav a.nav-highlight:hover {
     margin-bottom: 25px;
 }
 
-@media (max-width: 650px) {
-    .reservations-container {
-        margin: 25px auto;
-        padding: 12px;
-    }
 
-    .reservations-heading h1 {
-        font-size: 27px;
-    }
-
-    .reservations-card {
-        padding: 15px;
-    }
-
-    .reservations-card-heading {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .pastel-empty {
-        padding: 40px 18px;
-    }
-}
-
-/* ===== PASTEL FLORAL - RESERVE TICKETS ===== */
+/* =====================================
+   11. RESERVE TICKETS
+===================================== */
 
 .reservation-form-container {
     max-width: 750px;
@@ -1365,7 +986,6 @@ nav a.nav-highlight:hover {
 
 .pastel-reservation-form input {
     width: 100%;
-    box-sizing: border-box;
     padding: 14px 16px;
     border: 1px solid #eadce9;
     border-radius: 12px;
@@ -1397,7 +1017,6 @@ nav a.nav-highlight:hover {
 .reservation-actions .button {
     text-align: center;
     justify-content: center;
-    box-sizing: border-box;
 }
 
 .reservation-actions .auth-button {
@@ -1427,34 +1046,32 @@ nav a.nav-highlight:hover {
     text-align: center;
 }
 
-@media (max-width: 650px) {
-    .reservation-form-container {
-        margin: 25px auto;
-        padding: 12px;
-    }
 
-    .reservation-form-card {
-        padding: 25px 18px;
-    }
+/* =====================================
+   12. THEME SELECTOR
+===================================== */
 
-    .reservation-event-info {
-        padding: 20px 15px;
-    }
-
-    .reservation-info-row {
-        font-size: 14px;
-    }
-
-    .reservation-actions {
-        width: 100%;
-    }
+.theme-form select {
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--background);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
 }
 
-/* =========================================
-   PERSONALIZIMI I TEMAVE
-   ========================================= */
+.theme-form select:focus {
+    border-color: var(--primary);
+}
 
-/* DARK THEME */
+
+/* =====================================
+   13. DARK THEME
+===================================== */
+
 body[data-theme="dark"] {
     --background: #171923;
     --white: #242735;
@@ -1467,9 +1084,16 @@ body[data-theme="dark"] {
     --pink: #493342;
     --mint: #293F38;
     --gold: #D6B96B;
+
+    background: var(--background);
+    color: var(--text);
 }
 
-/* OCEAN BLUE THEME */
+
+/* =====================================
+   14. OCEAN BLUE THEME
+===================================== */
+
 body[data-theme="ocean-blue"] {
     --background: #EFF7FC;
     --white: #FFFFFF;
@@ -1482,9 +1106,16 @@ body[data-theme="ocean-blue"] {
     --pink: #E5F0F7;
     --mint: #DDF0EB;
     --gold: #C6A45A;
+
+    background: var(--background);
+    color: var(--text);
 }
 
-/* SAGE GREEN THEME */
+
+/* =====================================
+   15. SAGE GREEN THEME
+===================================== */
+
 body[data-theme="sage-green"] {
     --background: #F1F5EF;
     --white: #FFFFFF;
@@ -1497,22 +1128,21 @@ body[data-theme="sage-green"] {
     --pink: #F0E9E2;
     --mint: #DCEBDD;
     --gold: #B99A55;
-}
 
-/* ELEMENTET E PËRBASHKËTA PËR TEMAT E REJA */
-body[data-theme="dark"],
-body[data-theme="ocean-blue"],
-body[data-theme="sage-green"] {
     background: var(--background);
     color: var(--text);
 }
 
+
+/* =====================================
+   16. COMMON THEME ELEMENTS
+===================================== */
+
+/* Headers */
+
 body[data-theme="dark"] .site-header,
 body[data-theme="ocean-blue"] .site-header,
-body[data-theme="sage-green"] .site-header,
-body[data-theme="dark"] .pastel-header,
-body[data-theme="ocean-blue"] .pastel-header,
-body[data-theme="sage-green"] .pastel-header {
+body[data-theme="sage-green"] .site-header {
     background: var(--white);
     color: var(--text);
     border-bottom: 1px solid var(--border);
@@ -1520,12 +1150,11 @@ body[data-theme="sage-green"] .pastel-header {
 
 body[data-theme="dark"] nav a,
 body[data-theme="ocean-blue"] nav a,
-body[data-theme="sage-green"] nav a,
-body[data-theme="dark"] .brand-link,
-body[data-theme="ocean-blue"] .brand-link,
-body[data-theme="sage-green"] .brand-link {
+body[data-theme="sage-green"] nav a {
     color: var(--text);
 }
+
+/* Hero and headings */
 
 body[data-theme="dark"] .hero,
 body[data-theme="ocean-blue"] .hero,
@@ -1548,6 +1177,8 @@ body[data-theme="sage-green"] .hero p {
     color: var(--muted);
 }
 
+/* Cards */
+
 body[data-theme="dark"] .event,
 body[data-theme="ocean-blue"] .event,
 body[data-theme="sage-green"] .event,
@@ -1565,11 +1196,16 @@ body[data-theme="ocean-blue"] .reservations-card,
 body[data-theme="sage-green"] .reservations-card,
 body[data-theme="dark"] .reservation-form-card,
 body[data-theme="ocean-blue"] .reservation-form-card,
-body[data-theme="sage-green"] .reservation-form-card {
+body[data-theme="sage-green"] .reservation-form-card,
+body[data-theme="dark"] .pastel-empty,
+body[data-theme="ocean-blue"] .pastel-empty,
+body[data-theme="sage-green"] .pastel-empty {
     background: var(--white);
     color: var(--text);
     border-color: var(--border);
 }
+
+/* Card headings */
 
 body[data-theme="dark"] .event h3,
 body[data-theme="ocean-blue"] .event h3,
@@ -1580,11 +1216,22 @@ body[data-theme="sage-green"] .empty h3,
 body[data-theme="dark"] .auth-heading h1,
 body[data-theme="ocean-blue"] .auth-heading h1,
 body[data-theme="sage-green"] .auth-heading h1,
+body[data-theme="dark"] .auth-card-heading h2,
+body[data-theme="ocean-blue"] .auth-card-heading h2,
+body[data-theme="sage-green"] .auth-card-heading h2,
+body[data-theme="dark"] .auth-card h2,
+body[data-theme="ocean-blue"] .auth-card h2,
+body[data-theme="sage-green"] .auth-card h2,
 body[data-theme="dark"] .reservations-heading h1,
 body[data-theme="ocean-blue"] .reservations-heading h1,
-body[data-theme="sage-green"] .reservations-heading h1 {
+body[data-theme="sage-green"] .reservations-heading h1,
+body[data-theme="dark"] .reservations-card-heading h2,
+body[data-theme="dark"] .reservation-event-info h2,
+body[data-theme="dark"] .event-create-card .section-heading h1 {
     color: var(--text);
 }
+
+/* Event details */
 
 body[data-theme="dark"] .event-details,
 body[data-theme="ocean-blue"] .event-details,
@@ -1606,6 +1253,8 @@ body[data-theme="sage-green"] .reservation-info-row {
     color: var(--muted);
 }
 
+/* Forms */
+
 body[data-theme="dark"] input,
 body[data-theme="dark"] select,
 body[data-theme="dark"] textarea,
@@ -1626,16 +1275,17 @@ body[data-theme="sage-green"] label {
     color: var(--text);
 }
 
+/* Footer */
+
 body[data-theme="dark"] .site-footer,
 body[data-theme="ocean-blue"] .site-footer,
-body[data-theme="sage-green"] .site-footer,
-body[data-theme="dark"] .pastel-footer,
-body[data-theme="ocean-blue"] .pastel-footer,
-body[data-theme="sage-green"] .pastel-footer {
+body[data-theme="sage-green"] .site-footer {
     background: var(--white);
     color: var(--muted);
     border-color: var(--border);
 }
+
+/* Tables */
 
 body[data-theme="dark"] .pastel-table thead,
 body[data-theme="ocean-blue"] .pastel-table thead,
@@ -1659,6 +1309,8 @@ body[data-theme="sage-green"] .pastel-table tbody tr:hover {
     background: var(--lavender);
 }
 
+/* Buttons */
+
 body[data-theme="dark"] .button-primary,
 body[data-theme="dark"] .reserve-link,
 body[data-theme="ocean-blue"] .button-primary,
@@ -1677,83 +1329,595 @@ body[data-theme="sage-green"] .reserve-link:hover {
     background: var(--primary-dark);
 }
 
-/* DARK THEME - AUTH BACKGROUND */
-body[data-theme="dark"] .auth-page {
-    background: var(--background);
+
+/* =====================================
+   17. LOGIN & REGISTER
+   NJË DIZAJN I PËRBASHKËT
+===================================== */
+
+body.auth-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: 45px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, .95), transparent 25%),
+        radial-gradient(circle at 88% 82%, rgba(232, 211, 239, .8), transparent 28%),
+        linear-gradient(135deg, #f9eff5, #eee8f8 50%, #fdf5e9);
 }
 
-body[data-theme="ocean-blue"] .auth-page {
-    background: #EAF4FA;
+/* Main authentication layout */
+
+.auth-container {
+    width: 100%;
+    max-width: 1050px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 430px;
+    align-items: center;
+    gap: 55px;
+    position: relative;
 }
 
-body[data-theme="sage-green"] .auth-page {
-    background: #EAF1E7;
-}
-/* =========================================
-   RREGULLIMET SHTESË PËR TEMAT
-========================================= */
-
-/* Ngjyrat e titujve dhe teksteve */
-body[data-theme="dark"] .event h3,
-body[data-theme="dark"] .empty h3,
-body[data-theme="dark"] .reservations-heading h1,
-body[data-theme="dark"] .reservations-card-heading h2,
-body[data-theme="dark"] .reservation-event-info h2,
-body[data-theme="dark"] .event-create-card .section-heading h1 {
-    color: var(--text);
+.login-container {
+    max-width: 1050px;
 }
 
-/* Kartat dhe përmbajtja */
-body[data-theme="dark"] .pastel-empty,
-body[data-theme="dark"] .reservation-form-card,
-body[data-theme="dark"] .event-create-card {
-    background: var(--white);
-    border-color: var(--border);
-    color: var(--text);
+.register-container {
+    max-width: 1150px;
+    grid-template-columns: 1fr 520px;
 }
 
-/* Tekstet e formularëve */
-body[data-theme="dark"] .auth-form label,
-body[data-theme="dark"] .pastel-event-form label,
-body[data-theme="dark"] .pastel-reservation-form label {
-    color: var(--text);
+/* Intro section */
+
+.auth-intro {
+    position: relative;
+    z-index: 1;
+    padding: 30px;
+    max-width: 540px;
 }
 
-/* Tabelat */
-body[data-theme="dark"] .pastel-table tbody tr:hover {
-    background: var(--lavender);
+.auth-eyebrow {
+    color: #a17caf;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 18px;
 }
 
-/* Tema Ocean Blue dhe Sage Green */
-body[data-theme="ocean-blue"] .pastel-empty,
-body[data-theme="ocean-blue"] .reservation-form-card,
-body[data-theme="ocean-blue"] .event-create-card,
-body[data-theme="sage-green"] .pastel-empty,
-body[data-theme="sage-green"] .reservation-form-card,
-body[data-theme="sage-green"] .event-create-card {
-    background: var(--white);
-    border-color: var(--border);
-    color: var(--text);
-}
-/* THEME SELECTOR */
-
-.theme-form select {
-    padding: 9px 13px;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    background: var(--background);
-    color: var(--text);
-    font-size: 13px;
+.auth-intro h1 {
+    color: #554268;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.2;
+    margin: 0 0 22px;
+    font-family: Georgia, serif;
     font-weight: 600;
-    cursor: pointer;
-    outline: none;
 }
 
-.theme-form select:focus {
-    border-color: var(--primary);
+.auth-description,
+.auth-intro > p:not(.auth-eyebrow) {
+    color: #81748b;
+    font-size: 16px;
+    line-height: 1.9;
+    max-width: 430px;
 }
+
+.auth-decoration {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-top: 35px;
+    color: #c5a64a;
+    font-size: 25px;
+}
+
+.auth-decoration .event-flower {
+    width: 55px;
+    height: 55px;
+}
+
+/* Authentication card */
+
+.auth-card {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 42px 38px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #eee5f2;
+    border-radius: 25px;
+    box-shadow: 0 18px 55px rgba(91, 65, 110, 0.11);
+    text-align: center;
+    backdrop-filter: blur(12px);
+    transition: box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+    box-shadow: 0 22px 60px rgba(91, 65, 105, 0.15);
+}
+
+.login-card {
+    border-top: 5px solid #9271b5;
+}
+
+.register-card {
+    border-top: 5px solid #c5a64a;
+    padding: 35px 38px;
+}
+
+/* Golden SVG flower */
+
+.auth-flower {
+    display: block;
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 20px;
+    color: #bd9846;
+    filter: drop-shadow(0 5px 7px rgba(197, 166, 74, 0.2));
+}
+
+/* Card headings */
+
+.auth-card-heading,
+.auth-heading {
+    text-align: center;
+    margin-bottom: 27px;
+}
+
+.auth-card-subtitle,
+.auth-heading .eyebrow {
+    color: #b49a61;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 0 0 10px;
+}
+
+.auth-heading .eyebrow {
+    display: inline-block;
+    padding: 7px 15px;
+    border-radius: 30px;
+    background: var(--lavender);
+    color: var(--primary-dark);
+}
+
+.auth-card-heading h2,
+.auth-card h2,
+.auth-heading h1 {
+    color: #57456b;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 10px;
+}
+
+.auth-card-heading > p:last-child,
+.auth-card-description,
+.auth-heading > p:last-child {
+    color: #96899c;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Authentication form */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    text-align: left;
+}
+
+/* Support for both form-group and field markup */
+
+.auth-form .form-group,
+.auth-form .field,
+.auth-card .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    margin: 0;
+}
+
+.auth-form label,
+.auth-card label {
+    display: block;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    color: #685773;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.auth-form input,
+.auth-card input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 49px;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    border: 1px solid #e8dfea;
+    border-radius: 12px;
+    outline: none;
+    background: #fcf9fd;
+    color: #554268;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+}
+
+.auth-form input::placeholder,
+.auth-card input::placeholder {
+    color: #b7aaba;
+}
+
+.auth-form input:hover,
+.auth-card input:hover {
+    border-color: #c5a6d6;
+}
+
+.auth-form input:focus,
+.auth-card input:focus {
+    border-color: #a78ac0;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(167, 138, 192, 0.12);
+}
+
+/* Register form layout */
+
+.register-container .auth-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.register-container .auth-form .form-group:nth-child(1),
+.register-container .auth-form .form-group:nth-child(2),
+.register-container .auth-form .field:nth-child(1),
+.register-container .auth-form .field:nth-child(2),
+.register-container .auth-form .auth-button {
+    grid-column: 1 / -1;
+}
+
+/* Authentication buttons */
+
+.auth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 8px;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 13px;
+    background: linear-gradient(120deg, #9d7bb5, #80649d);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(128, 100, 157, 0.2);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(128, 100, 157, 0.3);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+.auth-button span {
+    font-size: 18px;
+}
+
+.register-button {
+    background: linear-gradient(135deg, #c5a64a, #a88a36);
+}
+
+.register-button:hover {
+    box-shadow: 0 8px 20px rgba(197, 166, 74, 0.25);
+}
+
+/* Divider */
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+    color: #b6a9bb;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: #eee5ef;
+}
+
+/* Links */
+
+.auth-switch,
+.auth-bottom {
+    text-align: center;
+    color: #93869b;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 20px 0;
+}
+
+.auth-switch a,
+.auth-bottom a {
+    color: #9271b5;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-switch a:hover,
+.auth-bottom a:hover {
+    color: #70518f;
+    text-decoration: underline;
+}
+
+.auth-back {
+    display: block;
+    width: fit-content;
+    margin: 22px auto 0;
+    color: #aa9bb0;
+    font-size: 12px;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.auth-back:hover {
+    color: #80649d;
+}
+
+.auth-note {
+    margin: 20px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Authentication messages */
+
+.auth-message,
+.auth-card .message {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.auth-message.error,
+.error-message,
+.auth-card .message.error {
+    color: #a84d65;
+    background: #fff0f2;
+    border: 1px solid #f5d5dc;
+}
+
+.auth-message.success,
+.success-message,
+.auth-card .message.success {
+    color: #397b61;
+    background: #effaf3;
+    border: 1px solid #d4eddd;
+}
+
+/* Authentication footer */
+
+.pastel-footer {
+    background: #f8edf4;
+    border-top: 1px solid #f0dce9;
+    padding: 17px;
+    text-align: center;
+    color: #917c91;
+    font-size: 13px;
+}
+
+.pastel-footer p {
+    margin: 0;
+}
+
+
+/* =====================================
+   18. AUTHENTICATION THEMES
+===================================== */
+
+/* Dark */
+
+body.auth-page[data-theme="dark"] {
+    background:
+        radial-gradient(circle at 10% 20%, #30283b 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, #242d3a 0, transparent 35%),
+        var(--background);
+}
+
+body.auth-page[data-theme="dark"] .auth-card {
+    background: #30283a;
+    border-color: #51425d;
+}
+
+body.auth-page[data-theme="dark"] .auth-intro h1,
+body.auth-page[data-theme="dark"] .auth-card h2,
+body.auth-page[data-theme="dark"] .auth-card-heading h2,
+body.auth-page[data-theme="dark"] .auth-heading h1 {
+    color: #f0e5f5;
+}
+
+body.auth-page[data-theme="dark"] .auth-description,
+body.auth-page[data-theme="dark"] .auth-intro > p,
+body.auth-page[data-theme="dark"] .auth-card-description,
+body.auth-page[data-theme="dark"] .auth-switch,
+body.auth-page[data-theme="dark"] .auth-back {
+    color: #c2b2ce;
+}
+
+body.auth-page[data-theme="dark"] .auth-form label,
+body.auth-page[data-theme="dark"] .auth-card label {
+    color: #e3d4e9;
+}
+
+body.auth-page[data-theme="dark"] .auth-form input,
+body.auth-page[data-theme="dark"] .auth-card input {
+    background: #40364b;
+    border-color: #5a4a67;
+    color: #ffffff;
+}
+
+body.auth-page[data-theme="dark"] .auth-flower {
+    color: var(--gold);
+}
+
+body.auth-page[data-theme="dark"] .auth-divider::before,
+body.auth-page[data-theme="dark"] .auth-divider::after {
+    background: var(--border);
+}
+
+/* Ocean blue */
+
+body.auth-page[data-theme="ocean-blue"] {
+    background:
+        radial-gradient(circle at 10% 20%, #dcecf6 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, #dcefe9 0, transparent 35%),
+        var(--background);
+}
+
+body.auth-page[data-theme="ocean-blue"] .auth-button {
+    background: linear-gradient(120deg, #568ebc, #386d9e);
+}
+
+body.auth-page[data-theme="ocean-blue"] .auth-intro h1,
+body.auth-page[data-theme="ocean-blue"] .auth-card h2,
+body.auth-page[data-theme="ocean-blue"] .auth-card-heading h2 {
+    color: #345b7c;
+}
+
+body.auth-page[data-theme="ocean-blue"] .auth-card {
+    border-color: #d5e7f0;
+}
+
+/* Sage green */
+
+body.auth-page[data-theme="sage-green"] {
+    background:
+        radial-gradient(circle at 10% 20%, #e0ebdc 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, #f0e8dd 0, transparent 35%),
+        var(--background);
+}
+
+body.auth-page[data-theme="sage-green"] .auth-button {
+    background: linear-gradient(120deg, #83a58a, #63876d);
+}
+
+body.auth-page[data-theme="sage-green"] .auth-intro h1,
+body.auth-page[data-theme="sage-green"] .auth-card h2,
+body.auth-page[data-theme="sage-green"] .auth-card-heading h2 {
+    color: #496c51;
+}
+
+body.auth-page[data-theme="sage-green"] .auth-card {
+    border-color: #dce6d8;
+}
+
+
+/* =====================================
+   19. RESPONSIVE DESIGN
+===================================== */
+
+/* Main website */
 
 @media (max-width: 700px) {
+    .site-header {
+        padding: 14px 18px;
+    }
+
+    .header-content {
+        justify-content: center;
+    }
+
+    .brand {
+        font-size: 23px;
+    }
+
+    .brand-flower {
+        width: 43px;
+        height: 43px;
+    }
+
+    nav {
+        justify-content: center;
+        gap: 5px;
+    }
+
+    nav a {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 65px 20px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .container {
+        margin: 40px auto;
+        padding: 0 16px;
+    }
+
+    .section-heading {
+        align-items: start;
+    }
+
+    .section-heading h2 {
+        font-size: 29px;
+    }
+
+    .events {
+        grid-template-columns: 1fr;
+    }
+
+    .event {
+        padding: 21px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-actions .button {
+        width: 100%;
+        max-width: 280px;
+    }
+
     .theme-form {
         display: flex;
         justify-content: center;
@@ -1761,55 +1925,191 @@ body[data-theme="sage-green"] .event-create-card {
     }
 }
 
-/* Lulet dekorative SVG nga logoja */
+/* Authentication pages */
 
-.brand-flower {
-    display: block;
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
+@media (max-width: 900px) {
+    body.auth-page {
+        padding: 35px 20px;
+    }
+
+    .auth-container,
+    .register-container {
+        max-width: 600px;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .auth-intro {
+        text-align: center;
+        padding: 15px 10px;
+        margin: auto;
+    }
+
+    .auth-intro h1 {
+        font-size: 38px;
+    }
+
+    .auth-description,
+    .auth-intro > p:not(.auth-eyebrow) {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .auth-decoration {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .auth-card {
+        max-width: 520px;
+        margin: auto;
+    }
 }
 
-.hero-flower {
-    display: block;
-    width: 85px;
-    height: 85px;
-    margin: 28px auto 0;
-    color: #C29A45;
-    opacity: 0.8;
+@media (max-width: 600px) {
+    body.auth-page {
+        padding: 20px 13px;
+    }
+
+    .auth-intro h1 {
+        font-size: 31px;
+    }
+
+    .auth-description,
+    .auth-intro > p:not(.auth-eyebrow) {
+        font-size: 14px;
+    }
+
+    .auth-card,
+    .register-card {
+        padding: 30px 22px;
+        border-radius: 22px;
+    }
+
+    .register-container .auth-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .auth-card h2,
+    .auth-card-heading h2 {
+        font-size: 27px;
+    }
+
+    .auth-flower {
+        width: 66px;
+        height: 66px;
+    }
+
+    .auth-decoration {
+        display: none;
+    }
+
+    .auth-note {
+        font-size: 11px;
+        padding: 0 10px;
+    }
+
+    .pastel-footer {
+        padding: 15px 10px;
+    }
 }
 
-.event-count-flower {
-    display: inline-block;
-    width: 23px;
-    height: 23px;
-    color: #C29A45;
-    vertical-align: middle;
-    margin-right: 5px;
+@media (max-width: 380px) {
+    .auth-card,
+    .register-card {
+        padding: 25px 16px;
+    }
+
+    .auth-intro h1 {
+        font-size: 27px;
+    }
+
+    .auth-form input,
+    .auth-card input {
+        font-size: 13px;
+        padding: 12px;
+    }
 }
 
-.empty-icon {
-    display: block;
-    width: 65px;
-    height: 65px;
-    color: #C29A45;
-    margin: 0 auto 15px;
+/* Create event */
+
+@media (max-width: 650px) {
+    .event-create-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    .event-create-card {
+        padding: 25px 18px;
+    }
+
+    .pastel-event-form {
+        grid-template-columns: 1fr;
+    }
+
+    .pastel-event-form .full-width {
+        grid-column: auto;
+    }
+
+    .event-actions {
+        grid-column: auto;
+        flex-direction: column;
+    }
+
+    .event-actions .button {
+        width: 100%;
+        text-align: center;
+    }
 }
 
-.event-flower {
-    display: block;
-    width: 35px;
-    height: 35px;
-    min-width: 35px;
-    flex-shrink: 0;
-    color: #C29A45;
+/* Reservations */
+
+@media (max-width: 650px) {
+    .reservations-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    .reservations-heading h1 {
+        font-size: 27px;
+    }
+
+    .reservations-card {
+        padding: 15px;
+    }
+
+    .reservations-card-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .pastel-empty {
+        padding: 40px 18px;
+    }
 }
 
-.footer-flower {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    color: #C29A45;
-    vertical-align: middle;
-    margin-right: 7px;
+/* Reserve tickets */
+
+@media (max-width: 650px) {
+    .reservation-form-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    .reservation-form-card {
+        padding: 25px 18px;
+    }
+
+    .reservation-event-info {
+        padding: 20px 15px;
+    }
+
+    .reservation-info-row {
+        font-size: 14px;
+    }
+
+    .reservation-actions {
+        width: 100%;
+    }
 }

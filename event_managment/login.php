@@ -3,96 +3,12 @@
 session_start();
 require_once "db.php";
 
-// Temat e lejuara
-$allowedThemes = [
-    "pastel-floral",
-    "dark",
-    "ocean-blue",
-    "sage-green"
-];
-
-$currentTheme = $_SESSION["theme"] ?? "pastel-floral";
-
-if (!in_array($currentTheme, $allowedThemes, true)) {
-    $currentTheme = "pastel-floral";
-}
-
-$message = "";
-$messageType = "error";
-$email = "";
-
-// Kontrollojmë nëse përdoruesi sapo është regjistruar.
-if (isset($_GET["registered"]) && $_GET["registered"] === "1") {
-    $message = "Regjistrimi u krye me sukses. Tani mund të kyçesh.";
-    $messageType = "success";
-}
-
-// Procesi i kyçjes
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $email = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
-
-    if ($email === "" || $password === "") {
-
-        $message = "Ju lutem plotësoni email-in dhe fjalëkalimin.";
-
-    } else {
-
-        try {
-            $stmt = $pdo->prepare(
-                "SELECT id, name, email, password_hash, role, theme
-                 FROM users
-                 WHERE email = ?"
-            );
-
-            $stmt->execute([$email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user && password_verify($password, $user["password_hash"])) {
-
-                session_regenerate_id(true);
-
-                $_SESSION["user_id"] = $user["id"];
-                $_SESSION["user_name"] = $user["name"];
-                $_SESSION["user_email"] = $user["email"];
-                $_SESSION["user_role"] = $user["role"];
-
-                // Ngarkojmë temën e ruajtur në databazë.
-                $userTheme = $user["theme"] ?? "pastel-floral";
-
-                if (!in_array($userTheme, $allowedThemes, true)) {
-                    $userTheme = "pastel-floral";
-                }
-
-                $_SESSION["theme"] = $userTheme;
-
-                // Krijojmë tokenin CSRF.
-                $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
-
-                header("Location: index.php");
-                exit;
-
-            } else {
-
-                $message = "Email-i ose fjalëkalimi nuk është i saktë.";
-
-            }
-
-        } catch (PDOException $e) {
-
-            $message = "Nuk u arrit të kryhet kyçja. Provo përsëri.";
-
-        }
-    }
-}
-
-// Funksioni për sigurinë e tekstit.
+// Funksioni për mbrojtjen e tekstit HTML
 function h($value) {
-    return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
 
-// Funksioni për logon me lulen SVG.
+// Ikona dekorative e lules
 function flowerIcon($class = "") {
     return '
     <svg class="' . h($class) . '" viewBox="0 0 100 100"
@@ -117,6 +33,70 @@ function flowerIcon($class = "") {
         </g>
     </svg>';
 }
+
+// Nëse përdoruesi është kyçur, kthehet në kryefaqe
+if (isset($_SESSION["user_id"])) {
+    header("Location: index.php");
+    exit;
+}
+
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+
+    if ($email === "" || $password === "") {
+
+        $error = "Ju lutem plotësoni të gjitha fushat.";
+
+    } else {
+
+        try {
+
+            // Marrim të dhënat e përdoruesit nga databaza
+            $sql = "SELECT id, name, email, password_hash, role
+                    FROM users
+                    WHERE email = :email
+                    LIMIT 1";
+
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->execute([
+                "email" => $email
+            ]);
+
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Kontrollojmë fjalëkalimin
+            if ($user && password_verify($password, $user["password_hash"])) {
+
+                // Rigjenerojmë ID-në e sesionit
+                session_regenerate_id(true);
+
+                // Ruajmë të dhënat në sesion
+                $_SESSION["user_id"] = $user["id"];
+                $_SESSION["user_name"] = $user["name"];
+                $_SESSION["user_role"] = $user["role"];
+
+                // Ridrejtojmë përdoruesin në kryefaqe
+                header("Location: index.php");
+                exit;
+
+            } else {
+
+                $error = "Email ose fjalëkalim i pasaktë.";
+            }
+
+        } catch (PDOException $e) {
+
+            error_log("Gabim gjatë kyçjes: " . $e->getMessage());
+
+            $error = "Ndodhi një gabim gjatë kyçjes. Ju lutem provoni përsëri.";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -126,181 +106,113 @@ function flowerIcon($class = "") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kyçu | evente&bileta</title>
+    <title>Kyçu | Evente & Bileta</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 
-<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
+<body class="auth-page login-page">
 
-<!-- HEADER -->
-<header class="site-header">
+<div class="auth-container login-container">
 
-    <div class="header-content">
+    <!-- Pjesa dekorative -->
+    <section class="auth-intro login-intro">
 
-        <a href="index.php" class="brand">
+        <?= flowerIcon("auth-flower") ?>
 
-            <?= flowerIcon("brand-flower") ?>
+        <p class="auth-eyebrow">MIRË SE U KTHEVE</p>
 
-            <span>evente<span class="brand-amp">&</span>bileta</span>
+        <h1>Vazhdo përvojën tënde me eventet.</h1>
 
-        </a>
+        <p>
+            Kyçu në llogarinë tënde për të zbuluar evente,
+            rezervuar bileta dhe menaxhuar rezervimet.
+        </p>
 
-        <nav>
-
-            <a href="index.php">Kryefaqja</a>
-
-            <a href="register.php" class="nav-highlight">
-                Regjistrohu
-            </a>
-
-        </nav>
-
-    </div>
-
-</header>
-
-
-<!-- LOGIN SECTION -->
-<main class="auth-container">
-
-    <div class="auth-decoration decoration-one">
-        <?= flowerIcon("event-flower") ?>
-    </div>
-
-    <div class="auth-decoration decoration-two">
-        <?= flowerIcon("event-flower") ?>
-    </div>
-
-
-    <section class="auth-card">
-
-        <div class="auth-flower">
-            <?= flowerIcon("empty-icon") ?>
+        <div class="auth-decoration">
+            <span>✧</span>
+            <span>✿</span>
+            <span>✧</span>
         </div>
 
-        <div class="auth-heading">
+    </section>
 
-            <span class="eyebrow">
-                MIRË SE U KTHEVE
-            </span>
+    <!-- Forma e kyçjes -->
+    <section class="auth-card login-card">
 
-            <h1>Mirë se vjen përsëri!</h1>
+        <div class="auth-card-heading">
 
-            <p>
-                Kyçu në llogarinë tënde dhe zbulo eventet e ardhshme.
-            </p>
+            <p class="auth-eyebrow">LLOGARIA JOTE</p>
+
+            <h2>Kyçu në llogari</h2>
+
+            <p>Plotëso të dhënat për të vazhduar.</p>
 
         </div>
 
+        <!-- Mesazhi i gabimit -->
+        <?php if ($error !== ""): ?>
 
-        <!-- MESSAGES -->
-        <?php if ($message !== ""): ?>
-
-            <div class="message <?= h($messageType) ?>">
-                <?= h($message) ?>
+            <div class="message error-message">
+                <?= h($error) ?>
             </div>
 
         <?php endif; ?>
 
+        <form method="POST" action="login.php">
 
-        <!-- LOGIN FORM -->
-        <form method="POST" class="auth-form">
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="email">
-                    Email-i
-                </label>
+                <label for="email">Email adresa</label>
 
                 <input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Shkruaj email-in tënd"
-                    value="<?= h($email) ?>"
-                    required
+                    placeholder="shembull@email.com"
+                    value="<?= h($_POST["email"] ?? "") ?>"
                     autocomplete="email"
+                    required
                 >
 
             </div>
 
+            <div class="form-group">
 
-            <div class="field">
-
-                <label for="password">
-                    Fjalëkalimi
-                </label>
+                <label for="password">Fjalëkalimi</label>
 
                 <input
                     type="password"
                     id="password"
                     name="password"
                     placeholder="Shkruaj fjalëkalimin"
-                    required
                     autocomplete="current-password"
+                    required
                 >
 
             </div>
 
-
             <button type="submit" class="auth-button">
-
-                Kyçu në llogari
-                <span>→</span>
-
+                Kyçu
             </button>
 
         </form>
 
-
-        <div class="auth-divider">
-            <span>OSE</span>
-        </div>
-
-
-        <p class="auth-bottom">
+        <div class="auth-switch">
 
             Nuk ke ende llogari?
 
-            <a href="register.php">
-                Regjistrohu këtu
-            </a>
+            <a href="register.php">Regjistrohu këtu</a>
 
-        </p>
+        </div>
+
+        <a href="index.php" class="auth-back">
+            ← Kthehu në kryefaqe
+        </a>
 
     </section>
 
-
-    <p class="auth-note">
-        ✿ Çdo event i bukur fillon me një përvojë të bukur. ✿
-    </p>
-
-</main>
-
-
-<!-- FOOTER -->
-<footer class="site-footer">
-
-    <div class="footer-brand">
-
-        <?= flowerIcon("footer-flower") ?>
-
-        evente<span>&</span>bileta
-
-    </div>
-
-    <p>
-        Zbulo. Përjeto. Krijo kujtime të bukura.
-    </p>
-
-    <div class="footer-line"></div>
-
-    <small>
-        © <?= date("Y") ?> evente&bileta. Të gjitha të drejtat e rezervuara.
-    </small>
-
-</footer>
+</div>
 
 </body>
 </html>
