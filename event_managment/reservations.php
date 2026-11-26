@@ -101,17 +101,16 @@ $errorCode = $_GET["error"] ?? "";
 
     <title>Rezervimet e mia | evente&bileta</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 
-<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
+<body class="auth-page reservations-page" data-theme="<?= h($currentTheme) ?>">
 
 <!-- HEADER -->
 <header class="site-header">
     <div class="header-content">
 
         <a href="index.php" class="brand">
-
             <?= flowerIcon("brand-flower") ?>
 
             <span>evente<span class="brand-amp">&</span>bileta</span>

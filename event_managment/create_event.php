@@ -3,6 +3,8 @@
 session_start();
 require_once "db.php";
 
+date_default_timezone_set("Europe/Belgrade");
+
 // Vetëm administratori mund të krijojë evente.
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
@@ -76,6 +78,7 @@ $price = "";
 $totalTickets = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
     $title = trim($_POST["title"] ?? "");
     $category = trim($_POST["category"] ?? "");
     $description = trim($_POST["description"] ?? "");
@@ -88,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $totalTickets = $ticketsInput;
 
     $validDate = false;
+    $dateObject = false;
 
     if ($eventDate !== "") {
         $dateObject = DateTime::createFromFormat(
@@ -108,6 +112,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $ticketsInput === ""
     ) {
         $message = "Ju lutem plotësoni të gjitha fushat e detyrueshme.";
+
+    } elseif ($dateObject <= new DateTime()) {
+        $message = "Gabim! Nuk mund të krijoni një event me datë dhe orë të kaluar.";
 
     } elseif (!is_numeric($priceInput) || (float)$priceInput < 0) {
         $message = "Çmimi duhet të jetë numër pozitiv ose zero.";
@@ -184,10 +191,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krijo event të ri</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 
-<body class="auth-page" data-theme="<?= h($currentTheme) ?>">
+<body class="auth-page create-event-page" data-theme="<?= h($currentTheme) ?>">
 
 <header class="site-header">
     <div class="header-content">
@@ -199,11 +206,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <nav>
             <a href="index.php">Kryefaqja</a>
+
+            <a href="expired_events.php">Eventet e skaduara</a>
+
             <a href="create_event.php" class="active">Krijo event</a>
+
             <a href="reservations.php">Rezervimet e mia</a>
+
             <a href="logout.php">Dil nga llogaria</a>
 
             <form action="change_theme.php" method="POST" class="theme-form">
+
                 <input
                     type="hidden"
                     name="csrf_token"
@@ -231,6 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         Sage Green
                     </option>
                 </select>
+
             </form>
         </nav>
 
@@ -339,6 +353,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="datetime-local"
                     id="event_date"
                     name="event_date"
+                    min="<?= h(date("Y-m-d\TH:i")) ?>"
                     value="<?= h($eventDate) ?>"
                     required
                 >

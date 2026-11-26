@@ -2113,3 +2113,82 @@ body.auth-page[data-theme="sage-green"] .auth-card {
         width: 100%;
     }
 }
+
+
+/* =====================================
+   FIX: HEADER DHE FOOTER - REZERVIMET
+===================================== */
+
+/* Layout kryesor i faqes së rezervimeve */
+body.auth-page.reservations-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+    justify-content: flex-start;
+
+    overflow-x: hidden;
+}
+
+/* Header gjithmonë në krye */
+body.auth-page.reservations-page .site-header {
+    display: block;
+    width: 100%;
+    flex: 0 0 auto;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Përmbajtja kryesore */
+body.auth-page.reservations-page main.reservations-container {
+    display: block;
+    width: 100%;
+    max-width: 1250px;
+
+    margin: 55px auto;
+    padding: 20px 25px;
+
+    flex: 1 0 auto;
+}
+
+/* Footer në fund të faqes */
+body.auth-page.reservations-page .site-footer {
+    display: block;
+    width: 100%;
+
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* Rregullimi për telefona */
+@media (max-width: 650px) {
+
+    body.auth-page.reservations-page main.reservations-container {
+        margin: 25px auto;
+        padding: 12px;
+    }
+
+    body.auth-page.reservations-page .reservations-card {
+        padding: 15px;
+    }
+
+    body.auth-page.reservations-page .reservations-heading h1 {
+        font-size: 27px;
+    }
+
+    body.auth-page.reservations-page .reservations-card-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    body.auth-page.reservations-page .pastel-table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+}

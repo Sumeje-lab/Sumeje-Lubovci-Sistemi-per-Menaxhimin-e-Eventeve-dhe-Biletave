@@ -3,6 +3,8 @@
 session_start();
 require_once "db.php";
 
+date_default_timezone_set("Europe/Belgrade");
+
 $events = [];
 $error = "";
 $successMessage = "";
@@ -22,9 +24,11 @@ try {
                 price,
                 available_tickets
             FROM events
+            WHERE event_date >= ?
             ORDER BY event_date ASC";
 
-    $stmt = $pdo->query($sql);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([date("Y-m-d H:i:s")]);
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
@@ -55,7 +59,6 @@ function h($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
 
-// Funksioni për shfaqjen e lules së logos.
 function flowerIcon($class = "") {
     return '
     <svg class="' . h($class) . '" viewBox="0 0 100 100"
@@ -87,27 +90,24 @@ function flowerIcon($class = "") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>evente&bileta | Zbulo eventin tënd</title>
-
     <link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body data-theme="<?= h($currentTheme) ?>">
 
-<!-- HEADER -->
 <header class="site-header">
     <div class="header-content">
 
         <a href="index.php" class="brand">
-
             <?= flowerIcon("brand-flower") ?>
-
             <span>evente<span class="brand-amp">&</span>bileta</span>
         </a>
 
         <nav>
             <a href="index.php" class="active">Kryefaqja</a>
+
+            <a href="expired_events.php">Eventet e skaduara</a>
 
             <?php if ($isLoggedIn): ?>
 
@@ -122,7 +122,6 @@ function flowerIcon($class = "") {
                 <a href="logout.php">Dil nga llogaria</a>
 
                 <form action="change_theme.php" method="POST" class="theme-form">
-
                     <input
                         type="hidden"
                         name="csrf_token"
@@ -134,27 +133,22 @@ function flowerIcon($class = "") {
                         onchange="this.form.submit()"
                         aria-label="Zgjidh temën e faqes"
                     >
-                        <option value="pastel-floral"
-                            <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
+                        <option value="pastel-floral" <?= $currentTheme === "pastel-floral" ? "selected" : "" ?>>
                             Pastel Floral
                         </option>
 
-                        <option value="dark"
-                            <?= $currentTheme === "dark" ? "selected" : "" ?>>
+                        <option value="dark" <?= $currentTheme === "dark" ? "selected" : "" ?>>
                             Dark
                         </option>
 
-                        <option value="ocean-blue"
-                            <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
+                        <option value="ocean-blue" <?= $currentTheme === "ocean-blue" ? "selected" : "" ?>>
                             Ocean Blue
                         </option>
 
-                        <option value="sage-green"
-                            <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
+                        <option value="sage-green" <?= $currentTheme === "sage-green" ? "selected" : "" ?>>
                             Sage Green
                         </option>
                     </select>
-
                 </form>
 
             <?php else: ?>
@@ -171,8 +165,6 @@ function flowerIcon($class = "") {
     </div>
 </header>
 
-
-<!-- HERO SECTION -->
 <section class="hero">
 
     <div class="hero-decoration hero-decoration-one"></div>
@@ -209,7 +201,6 @@ function flowerIcon($class = "") {
         <?php else: ?>
 
             <div class="hero-actions">
-
                 <a href="#events" class="button button-primary">
                     Eksploro eventet
                 </a>
@@ -217,7 +208,6 @@ function flowerIcon($class = "") {
                 <a href="register.php" class="button button-light">
                     Krijo llogari
                 </a>
-
             </div>
 
         <?php endif; ?>
@@ -227,8 +217,6 @@ function flowerIcon($class = "") {
     </div>
 </section>
 
-
-<!-- MAIN CONTENT -->
 <main class="container" id="events">
 
     <div class="section-heading">
@@ -244,23 +232,17 @@ function flowerIcon($class = "") {
         </div>
 
         <div class="event-count">
-
             <?= flowerIcon("event-count-flower") ?>
-
             Evente për t'u zbuluar
         </div>
 
     </div>
 
-
     <?php if ($successMessage !== ""): ?>
-
         <div class="message success">
             <?= h($successMessage) ?>
         </div>
-
     <?php endif; ?>
-
 
     <?php if ($error !== ""): ?>
 
@@ -271,15 +253,13 @@ function flowerIcon($class = "") {
     <?php elseif (empty($events)): ?>
 
         <div class="empty">
-
             <?= flowerIcon("empty-icon") ?>
 
-            <h3>Ende nuk ka evente</h3>
+            <h3>Nuk ka evente të ardhshme</h3>
 
             <p>
                 Eventet e reja do të shfaqen këtu sapo të regjistrohen.
             </p>
-
         </div>
 
     <?php else: ?>
@@ -291,13 +271,11 @@ function flowerIcon($class = "") {
                 <article class="event">
 
                     <div class="event-top">
-
                         <span class="category">
                             <?= h($event["category"] ?? "Tjetër") ?>
                         </span>
 
                         <?= flowerIcon("event-flower") ?>
-
                     </div>
 
                     <h3><?= h($event["title"]) ?></h3>
@@ -315,7 +293,6 @@ function flowerIcon($class = "") {
 
                         <p>
                             <span class="detail-icon">◷</span>
-
                             <?= h(date(
                                 "d.m.Y H:i",
                                 strtotime($event["event_date"])
@@ -336,9 +313,7 @@ function flowerIcon($class = "") {
 
                         <div class="tickets">
                             <span class="ticket-dot"></span>
-
-                            <?= (int)$event["available_tickets"] ?>
-                            bileta të lira
+                            <?= (int)$event["available_tickets"] ?> bileta të lira
                         </div>
 
                     </div>
@@ -386,16 +361,11 @@ function flowerIcon($class = "") {
 
 </main>
 
-
-<!-- FOOTER -->
 <footer class="site-footer">
 
     <div class="footer-brand">
-
         <?= flowerIcon("footer-flower") ?>
-
         evente<span>&</span>bileta
-
     </div>
 
     <p>
